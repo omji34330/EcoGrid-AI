@@ -63,12 +63,16 @@ export const Team: React.FC = () => {
             <div className="p-6 space-y-4">
               {/* Member Photo & Social Header */}
               <div className="flex items-start justify-between">
-                <div className="relative">
-                  <img
-                    src={member.avatar}
-                    alt={`${member.name}, ${member.role}`}
-                    className="w-20 h-20 rounded-2xl object-cover border-2 border-emerald-500/30 shadow-md group-hover:scale-105 transition-transform duration-300"
-                  />
+                {/* Member Initials Monogram Badge (No external images) */}
+                <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500/20 via-teal-500/15 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/10 group-hover:border-emerald-400/50 group-hover:scale-105 transition-all duration-300">
+                  <span className="text-base font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">
+                    {member.name
+                      .split(' ')
+                      .filter(Boolean)
+                      .map((n) => n[0])
+                      .slice(0, 2)
+                      .join('')}
+                  </span>
                   <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#08131F] border border-emerald-500/40 flex items-center justify-center">
                     <Zap className="w-3 h-3 text-emerald-400" />
                   </span>

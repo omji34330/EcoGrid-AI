@@ -42,7 +42,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['React 19', 'TypeScript', 'FastAPI', 'Python', 'Tailwind CSS', 'Gemini AI', 'UI/UX'],
     github: 'https://github.com/omji34330',
     linkedin: 'https://linkedin.com/in/omjigupta',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'Full-stack application development, responsive glassmorphic design, API integration, and AI chatbot architecture.',
   },
   {
@@ -54,7 +53,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['Product Strategy', 'Technical Writing', 'PRD / TRD', 'System Workflow', 'Energy Market Research'],
     github: 'https://github.com/mohdfaizan-sih',
     linkedin: 'https://linkedin.com/in/mohd-faizan-ecogrid',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'PRD & TRD authoring, SIH 2026 problem statement alignment, and operational product roadmap.',
   },
   {
@@ -66,7 +64,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['Project Leadership', 'Agile / Scrum', 'Team Coordination', 'System Integration', 'Sprint Planning'],
     github: 'https://github.com/uzairansari-sih',
     linkedin: 'https://linkedin.com/in/uzair-ansari-lead',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'Overall project management, milestone tracking, team task allocation, and SIH grand finale preparation.',
   },
   {
@@ -78,7 +75,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['Renewable Energy', 'Solar PV Modeling', 'Wind Power Physics', 'Data Analytics', 'Microgrid Stability'],
     github: 'https://github.com/pritamyadav-research',
     linkedin: 'https://linkedin.com/in/pritam-yadav-energy',
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'Atmospheric clearness attenuation formulations, cubic wind curve modeling, and Kanpur weather data analysis.',
   },
   {
@@ -90,7 +86,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['Software Testing', 'Python / Pytest', 'Component Testing', 'TypeScript', 'Bug Triage', 'Git / CI'],
     github: 'https://github.com/farishansari-dev',
     linkedin: 'https://linkedin.com/in/farish-ansari',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'Backend unit test suites (test_server.py), UI component testing, and edge case resilience verification.',
   },
   {
@@ -102,7 +97,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     skills: ['Presentation & Pitch', 'Product Demonstration', 'Technical Communication', 'Visual Storytelling', 'ESG Metrics'],
     github: 'https://github.com/shivanshimishra',
     linkedin: 'https://linkedin.com/in/shivanshi-mishra',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
     sihContribution: 'SIH jury pitch deck, live interactive demo scripting, and ESG sustainability reporting presentations.',
   },
 ];

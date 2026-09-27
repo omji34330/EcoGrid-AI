@@ -135,7 +135,7 @@ export interface TeamMember {
   skills: string[];
   github: string;
   linkedin: string;
-  avatar: string;
+  avatar?: string;
   sihContribution: string;
 }
 
