@@ -20,7 +20,7 @@ export const Team: React.FC = () => {
 
         <div className="inline-flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
           <span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
-            Allenhouse Institute of Technology, Kanpur
+            Student at Allenhouse Institute of Technology, Kanpur
           </span>
           <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
             B.Tech Computer Science & Engineering (CSE)
@@ -175,7 +175,7 @@ export const Team: React.FC = () => {
                   {member.department}
                 </div>
                 <div className="text-[10.5px] text-slate-400">
-                  {member.institution || 'Allenhouse Institute of Technology, Kanpur'}
+                  {member.institution || 'Student at Allenhouse Institute of Technology, Kanpur'}
                 </div>
               </div>
 

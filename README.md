@@ -188,16 +188,17 @@ EcoGrid AI provides an end-to-end operational software blueprint demonstrating h
 
 ## 📋 EcoGrid AI Team Details
 
+* **Academic Status:** Students at Allenhouse Institute of Technology, Kanpur
 * **Institution:** Allenhouse Institute of Technology, Kanpur
 * **Department:** B.Tech Computer Science & Engineering (CSE)
 
-| Name | Role | Key Responsibility | Institution & Department |
+| Name | Role | Key Responsibility | Academic Status & Department |
 | :--- | :--- | :--- | :--- |
-| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
-| **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
-| **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
-| **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
-| **Mohammad Farish Ansari** | Team Member | Development, Testing & Implementation | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
-| **Shivanshi Mishra** | Presentation | Demo Presentation & Communication | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohammad Farish Ansari** | Team Member | Development, Testing & Implementation | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Shivanshi Mishra** | Presentation | Demo Presentation & Communication | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
 
 
