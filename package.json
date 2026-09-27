@@ -1,0 +1,11 @@
+{
+  "name": "ecogrid-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EcoGrid AI - Smart India Hackathon 2026 Microgrid Intelligence Platform",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "dev": "npm --prefix frontend run dev",
+    "preview": "npm --prefix frontend run preview"
+  }
+}
