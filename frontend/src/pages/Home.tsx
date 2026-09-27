@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   Sun,
@@ -13,6 +13,7 @@ import {
   Activity,
   Cpu,
   Sparkles,
+  Rotate3d,
 } from 'lucide-react';
 import { useLocationContext } from '../context/LocationContext';
 import { LocationSelector } from '../components/layout/LocationSelector';
@@ -21,10 +22,14 @@ import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { LiveOperatorNarrator } from '../components/ui/LiveOperatorNarrator';
 import { InteractiveEnergyFlow } from '../components/charts/InteractiveEnergyFlow';
 import { CommunityImpactStories } from '../components/ui/CommunityImpactStories';
+import { MicrogridDigitalTwin3D } from '../components/3d/MicrogridDigitalTwin3D';
+import { Card3DTilt } from '../components/3d/Card3DTilt';
+import { AtmosphereGlobe3D } from '../components/3d/AtmosphereGlobe3D';
 
 export const Home: React.FC = () => {
   const { location } = useLocationContext();
   const { telemetry } = useLiveData();
+  const [activeVisualizer, setActiveVisualizer] = useState<'3d' | 'schematic'>('3d');
 
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? 'Good morning' : currentHour < 17 ? 'Good afternoon' : 'Good evening';
@@ -109,6 +114,20 @@ export const Home: React.FC = () => {
           </span>
         </motion.div>
 
+        {/* 3D Holographic Location Globe Beacon */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, delay: 0.28 }}
+          className="my-3 flex justify-center"
+        >
+          <AtmosphereGlobe3D
+            latitude={location.latitude}
+            longitude={location.longitude}
+            locationName={location.name}
+          />
+        </motion.div>
+
         {/* Action CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -177,9 +196,75 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Interactive Microgrid Energy Flow Schematic */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <InteractiveEnergyFlow telemetry={telemetry} />
+      {/* Interactive Microgrid Visualization Center: 3D Digital Twin & Schematic Flow */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                Interactive Power Visualization
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+              Live Microgrid Digital Twin & Flow
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+              Explore the 3D physics-rendered digital twin or switch to schematic energy conduits
+            </p>
+          </div>
+
+          {/* Mode Switcher Buttons */}
+          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-slate-900/80 border border-white/10 self-start sm:self-auto shadow-lg backdrop-blur-md">
+            <button
+              onClick={() => setActiveVisualizer('3d')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeVisualizer === '3d'
+                  ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-white shadow-lg shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Rotate3d className="w-4 h-4" />
+              <span>3D Digital Twin</span>
+            </button>
+            <button
+              onClick={() => setActiveVisualizer('schematic')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                activeVisualizer === 'schematic'
+                  ? 'bg-gradient-to-r from-cyan-500 to-emerald-500 text-white shadow-lg shadow-cyan-500/20'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              <span>Schematic Flow</span>
+            </button>
+          </div>
+        </div>
+
+        {/* View Mode Rendering */}
+        <AnimatePresence mode="wait">
+          {activeVisualizer === '3d' ? (
+            <motion.div
+              key="3d-twin-view"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+            >
+              <MicrogridDigitalTwin3D telemetry={telemetry} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="schematic-flow-view"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.3 }}
+            >
+              <InteractiveEnergyFlow telemetry={telemetry} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </section>
 
       {/* Real Lives Touched in Kanpur (Community Impact Stories) */}
@@ -203,82 +288,94 @@ export const Home: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Card 1 */}
-          <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-5">
-              <Sun className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-5">
+                <Sun className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                Atmospheric Solar Modeling
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Dynamically computes solar zenith angles, daylight clearness attenuation, and mono-Si cell temperature derating across Kanpur's high-variance climate.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              Atmospheric Solar Modeling
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Dynamically computes solar zenith angles, daylight clearness attenuation, and mono-Si cell temperature derating across Kanpur's high-variance climate.
-            </p>
-          </div>
+          </Card3DTilt>
 
           {/* Card 2 */}
-          <div className="glass-panel p-6 hover:border-cyan-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-5">
-              <Wind className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-cyan-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-5">
+                <Wind className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                Cubic Aerodynamic Wind Yield
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Models turbine fluid dynamics through a parameterized cubic curve (10 km/h cut-in to 45 km/h rated), capturing pre-monsoon convective winds.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              Cubic Aerodynamic Wind Yield
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Models turbine fluid dynamics through a parameterized cubic curve (10 km/h cut-in to 45 km/h rated), capturing pre-monsoon convective winds.
-            </p>
-          </div>
+          </Card3DTilt>
 
           {/* Card 3 */}
-          <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5">
-              <BatteryCharging className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5">
+                <BatteryCharging className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                BESS Battery SOC Optimization
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Tracks 10 kWh LiFePO4 battery charge status with strict 15%–95% safe operational depth of discharge, scheduling storage ahead of evening peak load.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              BESS Battery SOC Optimization
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Tracks 10 kWh LiFePO4 battery charge status with strict 15%–95% safe operational depth of discharge, scheduling storage ahead of evening peak load.
-            </p>
-          </div>
+          </Card3DTilt>
 
           {/* Card 4 */}
-          <div className="glass-panel p-6 hover:border-purple-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-5">
-              <BarChart3 className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-purple-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-5">
+                <BarChart3 className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                Verifiable ESG Carbon Audits
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Converts clean generation into certified Scope 2 carbon displacement using the official CEA 0.82 kg CO₂/kWh factor with one-click CSV export and print layouts.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              Verifiable ESG Carbon Audits
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Converts clean generation into certified Scope 2 carbon displacement using the official CEA 0.82 kg CO₂/kWh factor with one-click CSV export and print layouts.
-            </p>
-          </div>
+          </Card3DTilt>
 
           {/* Card 5 */}
-          <div className="glass-panel p-6 hover:border-teal-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-5">
-              <Bot className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-teal-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 mb-5">
+                <Bot className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                EcoGrid Copilot (Gemini-Powered)
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                An intelligent energy assistant providing natural-language explanations of weather influence, microgrid health, and dispatch advice with resilient zero-failure fallback.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              EcoGrid Copilot (Gemini-Powered)
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              An intelligent energy assistant providing natural-language explanations of weather influence, microgrid health, and dispatch advice with resilient zero-failure fallback.
-            </p>
-          </div>
+          </Card3DTilt>
 
           {/* Card 6 */}
-          <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5">
-              <Cpu className="w-6 h-6" />
+          <Card3DTilt>
+            <div className="glass-panel p-6 hover:border-emerald-500/30 transition-all duration-300 h-full">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-5">
+                <Cpu className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                SIH 2026 Ready & IoT Scalable
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                Architected to seamlessly accept physical smart meter and Modbus inverter streams, ready for physical deployment across institutional microgrids.
+              </p>
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
-              SIH 2026 Ready & IoT Scalable
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              Architected to seamlessly accept physical smart meter and Modbus inverter streams, ready for physical deployment across institutional microgrids.
-            </p>
-          </div>
+          </Card3DTilt>
         </div>
       </section>
 

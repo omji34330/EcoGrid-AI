@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Thermometer,
   Wind,
@@ -15,6 +15,7 @@ import {
   Leaf,
   Clock,
   MapPin,
+  Rotate3d,
 } from 'lucide-react';
 import { useLiveData } from '../hooks/useLiveData';
 import { MetricCard } from '../components/ui/MetricCard';
@@ -25,6 +26,8 @@ import { GenerationBarChart } from '../components/charts/GenerationBarChart';
 import { BatteryGauge } from '../components/charts/BatteryGauge';
 import { LocationSelector } from '../components/layout/LocationSelector';
 import { LiveOperatorNarrator } from '../components/ui/LiveOperatorNarrator';
+import { MicrogridDigitalTwin3D } from '../components/3d/MicrogridDigitalTwin3D';
+import { Card3DTilt } from '../components/3d/Card3DTilt';
 
 export const Dashboard: React.FC = () => {
   const {
@@ -37,6 +40,7 @@ export const Dashboard: React.FC = () => {
     togglePause,
     refetch,
   } = useLiveData();
+  const [show3DTwin, setShow3DTwin] = useState<boolean>(true);
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-8">
@@ -65,10 +69,23 @@ export const Dashboard: React.FC = () => {
           </p>
         </div>
 
-        {/* Refresh, Sync & Location Controls */}
+        {/* Refresh, Sync, 3D Twin & Location Controls */}
         <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           {/* Quick Location Switcher / GPS */}
           <LocationSelector compact />
+
+          {/* 3D Twin Toggle Button */}
+          <button
+            onClick={() => setShow3DTwin((prev) => !prev)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all ${
+              show3DTwin
+                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-sm'
+                : 'bg-slate-900/60 border-white/10 text-slate-300 hover:text-white'
+            }`}
+          >
+            <Rotate3d className={`w-3.5 h-3.5 ${show3DTwin ? 'animate-spin-slow' : ''}`} />
+            <span>{show3DTwin ? '3D Twin: Active' : 'Show 3D Twin'}</span>
+          </button>
 
           {/* Countdown Pill */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/60 border border-white/10 text-xs text-slate-300">
@@ -121,6 +138,21 @@ export const Dashboard: React.FC = () => {
       {/* Live AI Operator Narrator Voice Banner */}
       <LiveOperatorNarrator telemetry={telemetry} />
 
+      {/* 3D Microgrid Digital Twin Section */}
+      <AnimatePresence>
+        {show3DTwin && (
+          <motion.section
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <MicrogridDigitalTwin3D telemetry={telemetry} />
+          </motion.section>
+        )}
+      </AnimatePresence>
+
       {/* Primary Weather KPIs (5 Core Metrics Required by Prompt) */}
       <section>
         <div className="flex items-center justify-between mb-4">
@@ -143,74 +175,84 @@ export const Dashboard: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {/* 1. Temperature */}
-            <MetricCard
-              title="Temperature"
-              value={telemetry?.temperature ?? 28.5}
-              unit="°C"
-              subtitle={`Feels like ${telemetry?.feelsLike ?? 30}°C`}
-              icon={Thermometer}
-              color="amber"
-              trend={{ value: '0.4°C / hr', isPositive: true, label: 'Diurnal climb' }}
-              badge={telemetry?.weatherCondition ?? 'Clear'}
-            />
+            <Card3DTilt>
+              <MetricCard
+                title="Temperature"
+                value={telemetry?.temperature ?? 28.5}
+                unit="°C"
+                subtitle={`Feels like ${telemetry?.feelsLike ?? 30}°C`}
+                icon={Thermometer}
+                color="amber"
+                trend={{ value: '0.4°C / hr', isPositive: true, label: 'Diurnal climb' }}
+                badge={telemetry?.weatherCondition ?? 'Clear'}
+              />
+            </Card3DTilt>
 
             {/* 2. Wind Speed */}
-            <MetricCard
-              title="Wind Speed"
-              value={telemetry?.windSpeed ?? 14.2}
-              unit="km/h"
-              subtitle={`${((telemetry?.windSpeed ?? 14.2) / 3.6).toFixed(1)} m/s • Dir ${telemetry?.windDirection ?? 120}°`}
-              icon={Wind}
-              color="cyan"
-              trend={{
-                value: (telemetry?.windSpeed ?? 14) >= 10 ? 'Generating' : 'Standby',
-                isPositive: (telemetry?.windSpeed ?? 14) >= 10,
-                label: '10 km/h cut-in',
-              }}
-              badge="3 kW Turbine"
-            />
+            <Card3DTilt>
+              <MetricCard
+                title="Wind Speed"
+                value={telemetry?.windSpeed ?? 14.2}
+                unit="km/h"
+                subtitle={`${((telemetry?.windSpeed ?? 14.2) / 3.6).toFixed(1)} m/s • Dir ${telemetry?.windDirection ?? 120}°`}
+                icon={Wind}
+                color="cyan"
+                trend={{
+                  value: (telemetry?.windSpeed ?? 14) >= 10 ? 'Generating' : 'Standby',
+                  isPositive: (telemetry?.windSpeed ?? 14) >= 10,
+                  label: '10 km/h cut-in',
+                }}
+                badge="3 kW Turbine"
+              />
+            </Card3DTilt>
 
             {/* 3. Cloud Cover */}
-            <MetricCard
-              title="Cloud Cover"
-              value={telemetry?.cloudCover ?? 25}
-              unit="%"
-              subtitle={
-                (telemetry?.cloudCover ?? 25) < 30 ? 'High clearness index' : 'Partial attenuation'
-              }
-              icon={CloudSun}
-              color="blue"
-              trend={{
-                value: `${Math.round(100 - (telemetry?.cloudCover ?? 25) * 0.75)}%`,
-                isPositive: (telemetry?.cloudCover ?? 25) < 40,
-                label: 'Solar clearness',
-              }}
-              badge="PV Attenuation"
-            />
+            <Card3DTilt>
+              <MetricCard
+                title="Cloud Cover"
+                value={telemetry?.cloudCover ?? 25}
+                unit="%"
+                subtitle={
+                  (telemetry?.cloudCover ?? 25) < 30 ? 'High clearness index' : 'Partial attenuation'
+                }
+                icon={CloudSun}
+                color="blue"
+                trend={{
+                  value: `${Math.round(100 - (telemetry?.cloudCover ?? 25) * 0.75)}%`,
+                  isPositive: (telemetry?.cloudCover ?? 25) < 40,
+                  label: 'Solar clearness',
+                }}
+                badge="PV Attenuation"
+              />
+            </Card3DTilt>
 
             {/* 4. Humidity */}
-            <MetricCard
-              title="Humidity"
-              value={telemetry?.humidity ?? 55}
-              unit="%"
-              subtitle="Relative atmospheric moisture"
-              icon={Droplets}
-              color="emerald"
-              trend={{ value: 'Normal', isPositive: true, label: 'Dew point ~18°C' }}
-              badge="Ambient"
-            />
+            <Card3DTilt>
+              <MetricCard
+                title="Humidity"
+                value={telemetry?.humidity ?? 55}
+                unit="%"
+                subtitle="Relative atmospheric moisture"
+                icon={Droplets}
+                color="emerald"
+                trend={{ value: 'Normal', isPositive: true, label: 'Dew point ~18°C' }}
+                badge="Ambient"
+              />
+            </Card3DTilt>
 
             {/* 5. Air Pressure */}
-            <MetricCard
-              title="Air Pressure"
-              value={telemetry?.airPressure ?? 1012}
-              unit="hPa"
-              subtitle="Surface barometric level"
-              icon={Gauge}
-              color="purple"
-              trend={{ value: 'Stable', isPositive: true, label: '1013.25 standard' }}
-              badge="Barometer"
-            />
+            <Card3DTilt>
+              <MetricCard
+                title="Air Pressure"
+                value={telemetry?.airPressure ?? 1012}
+                unit="hPa"
+                subtitle="Surface barometric level"
+                icon={Gauge}
+                color="purple"
+                trend={{ value: 'Stable', isPositive: true, label: '1013.25 standard' }}
+                badge="Barometer"
+              />
+            </Card3DTilt>
           </div>
         )}
       </section>
