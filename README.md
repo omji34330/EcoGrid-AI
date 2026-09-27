@@ -183,3 +183,17 @@ Returns atmospheric factor decomposition and natural-language AI insights for a 
 * **Location:** Kanpur, Uttar Pradesh, India
 
 EcoGrid AI provides an end-to-end operational software blueprint demonstrating how Indian educational campuses, industrial corridors, and rural microgrids can leapfrog from reactive blackout management to autonomous, AI-driven clean energy self-consumption.
+
+---
+
+## 📋 EcoGrid AI Team Details
+
+| Name | Role | Key Responsibility |
+| :--- | :--- | :--- |
+| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration |
+| **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation |
+| **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management |
+| **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis |
+| **Mohammad Farish Ansari** | Team Member | Development, Testing & Implementation |
+| **Shivanshi Mishra** | Presentation | Demo Presentation & Communication |
+

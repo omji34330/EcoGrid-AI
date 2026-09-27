@@ -129,6 +129,7 @@ export interface ChatMessage {
 export interface TeamMember {
   name: string;
   role: string;
+  keyResponsibility: string;
   department: string;
   bio: string;
   skills: string[];

@@ -98,15 +98,32 @@ export const Team: React.FC = () => {
 
               {/* Name & Role */}
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-400 transition-colors">
-                  {member.name}
-                </h3>
-                <div className="text-xs font-semibold text-emerald-400">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-400 transition-colors">
+                    {member.name}
+                  </h3>
+                  {member.role === 'Team Leader' && (
+                    <span className="px-2 py-0.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-400 text-[10px] font-bold">
+                      Team Leader
+                    </span>
+                  )}
+                </div>
+                <div className="text-xs font-semibold text-emerald-400 mt-0.5">
                   {member.role}
                 </div>
                 <div className="text-[11px] text-slate-500 dark:text-slate-400">
                   {member.department}
                 </div>
+              </div>
+
+              {/* Key Responsibility Badge */}
+              <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/25 text-xs">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-cyan-400 block mb-0.5">
+                  Key Responsibility
+                </span>
+                <span className="font-semibold text-slate-200">
+                  {member.keyResponsibility}
+                </span>
               </div>
 
               {/* Bio */}
