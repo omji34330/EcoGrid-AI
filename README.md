@@ -188,12 +188,16 @@ EcoGrid AI provides an end-to-end operational software blueprint demonstrating h
 
 ## 📋 EcoGrid AI Team Details
 
-| Name | Role | Key Responsibility |
-| :--- | :--- | :--- |
-| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration |
-| **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation |
-| **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management |
-| **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis |
-| **Mohammad Farish Ansari** | Team Member | Development, Testing & Implementation |
-| **Shivanshi Mishra** | Presentation | Demo Presentation & Communication |
+* **Institution:** Allenhouse Institute of Technology, Kanpur
+* **Department:** B.Tech Computer Science & Engineering (CSE)
+
+| Name | Role | Key Responsibility | Institution & Department |
+| :--- | :--- | :--- | :--- |
+| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Mohammad Farish Ansari** | Team Member | Development, Testing & Implementation | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| **Shivanshi Mishra** | Presentation | Demo Presentation & Communication | Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+
 

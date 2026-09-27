@@ -18,8 +18,17 @@ export const Team: React.FC = () => {
           Meet the Minds Behind <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">EcoGrid AI</span>
         </h1>
 
+        <div className="inline-flex flex-wrap items-center justify-center gap-2 text-xs font-semibold">
+          <span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            Allenhouse Institute of Technology, Kanpur
+          </span>
+          <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+            B.Tech Computer Science & Engineering (CSE)
+          </span>
+        </div>
+
         <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-          A multidisciplinary engineering team bridging artificial intelligence, meteorological modeling, power systems engineering, and sustainability policy for SIH 2026 (Problem Statement ID 26200).
+          Engineering team bridging artificial intelligence, meteorological modeling, power systems engineering, and sustainability policy for SIH 2026 (Problem Statement ID 26200).
         </p>
       </div>
 
@@ -32,14 +41,14 @@ export const Team: React.FC = () => {
             <div className="text-xs text-slate-400">SIH 2026 Software Edition</div>
           </div>
           <div className="space-y-1 md:px-4 pt-4 md:pt-0">
-            <span className="text-[11px] font-bold uppercase text-slate-400">Assigned Theme</span>
-            <div className="text-lg font-bold text-emerald-400">Renewable Energy</div>
-            <div className="text-xs text-slate-400">Sustainable Generation & Dispatch</div>
+            <span className="text-[11px] font-bold uppercase text-slate-400">Institution</span>
+            <div className="text-base sm:text-lg font-bold text-cyan-400">Allenhouse Institute of Tech.</div>
+            <div className="text-xs text-slate-400">Kanpur, Uttar Pradesh</div>
           </div>
           <div className="space-y-1 md:px-4 pt-4 md:pt-0">
-            <span className="text-[11px] font-bold uppercase text-slate-400">Target Benchmark</span>
-            <div className="text-lg font-bold text-cyan-400">Kanpur, UP</div>
-            <div className="text-xs text-slate-400">26.4499°N, 80.3319°E</div>
+            <span className="text-[11px] font-bold uppercase text-slate-400">Department</span>
+            <div className="text-base sm:text-lg font-bold text-emerald-400">B.Tech CSE</div>
+            <div className="text-xs text-slate-400">Computer Science & Engineering</div>
           </div>
           <div className="space-y-1 md:pl-4 pt-4 md:pt-0">
             <span className="text-[11px] font-bold uppercase text-slate-400">Submission Category</span>
@@ -162,8 +171,11 @@ export const Team: React.FC = () => {
                 <div className="text-xs font-semibold text-emerald-400 mt-0.5">
                   {member.role}
                 </div>
-                <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                <div className="text-[11px] text-slate-300 font-medium mt-1">
                   {member.department}
+                </div>
+                <div className="text-[10.5px] text-slate-400">
+                  {member.institution || 'Allenhouse Institute of Technology, Kanpur'}
                 </div>
               </div>
 

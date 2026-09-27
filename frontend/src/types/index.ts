@@ -130,6 +130,7 @@ export interface TeamMember {
   name: string;
   role: string;
   keyResponsibility: string;
+  institution?: string;
   department: string;
   bio: string;
   skills: string[];
