@@ -122,6 +122,94 @@ html:not(.dark) .bg-grid-pattern {
   animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Floating animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out 2s infinite;
+}
+
+/* Shimmer highlight sweeping across cards */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s infinite;
+}
+
+/* Animated SVG Energy Flow Path */
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -32;
+  }
+}
+
+.energy-line-solar {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.2s linear infinite;
+}
+
+.energy-line-wind {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1s linear infinite;
+}
+
+.energy-line-battery {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.4s linear infinite;
+}
+
+.energy-line-load {
+  stroke-dasharray: 6 6;
+  animation: dash-flow 1.1s linear infinite;
+}
+
+/* Aurora Ambient Gradient Rotation */
+@keyframes aurora {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+    opacity: 0.45;
+  }
+  50% {
+    filter: hue-rotate(45deg);
+    opacity: 0.65;
+  }
+}
+
+.animate-aurora {
+  animation: aurora 14s ease-in-out infinite;
+}
+
+/* Soundwave visualizer bars */
+@keyframes soundwave {
+  0%, 100% { height: 4px; }
+  50% { height: 18px; }
+}
+
+.soundwave-bar-1 { animation: soundwave 1.1s ease-in-out infinite; }
+.soundwave-bar-2 { animation: soundwave 0.8s ease-in-out infinite 0.2s; }
+.soundwave-bar-3 { animation: soundwave 1.4s ease-in-out infinite 0.4s; }
+.soundwave-bar-4 { animation: soundwave 0.9s ease-in-out infinite 0.1s; }
+
+/* Interactive Hover Lift & Glow */
+.interactive-card {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.interactive-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -10px rgba(16, 185, 129, 0.15), 0 0 20px 0 rgba(6, 182, 212, 0.1);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
 /* Print styling for Sustainability Reports */
 @media print {
   body {

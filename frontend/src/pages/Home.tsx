@@ -16,19 +16,29 @@ import {
 } from 'lucide-react';
 import { useLocationContext } from '../context/LocationContext';
 import { LocationSelector } from '../components/layout/LocationSelector';
+import { useLiveData } from '../hooks/useLiveData';
+import { AnimatedCounter } from '../components/ui/AnimatedCounter';
+import { LiveOperatorNarrator } from '../components/ui/LiveOperatorNarrator';
+import { InteractiveEnergyFlow } from '../components/charts/InteractiveEnergyFlow';
+import { CommunityImpactStories } from '../components/ui/CommunityImpactStories';
 
 export const Home: React.FC = () => {
   const { location } = useLocationContext();
+  const { telemetry } = useLiveData();
+
+  const currentHour = new Date().getHours();
+  const greeting = currentHour < 12 ? 'Good morning' : currentHour < 17 ? 'Good afternoon' : 'Good evening';
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Background Animated Atmosphere / Grid Effect */}
+      {/* Background Animated Atmosphere / Aurora Grid Effect */}
       <div className="absolute inset-0 bg-grid-pattern pointer-events-none opacity-40" />
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-emerald-500/15 via-teal-500/10 to-cyan-500/15 blur-[120px] pointer-events-none" />
-      <div className="absolute top-2/3 right-10 w-[450px] h-[450px] rounded-full bg-cyan-500/10 blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] rounded-full bg-gradient-to-tr from-emerald-500/20 via-teal-500/15 to-cyan-500/20 blur-[130px] pointer-events-none animate-aurora" />
+      <div className="absolute top-2/3 right-10 w-[500px] h-[500px] rounded-full bg-cyan-500/15 blur-[110px] pointer-events-none animate-float" />
+      <div className="absolute bottom-1/4 left-10 w-[400px] h-[400px] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none animate-float-delayed" />
 
       {/* Hero Section */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
+      <section className="relative pt-16 pb-16 md:pt-24 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center">
         {/* SIH 2026 Header Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -42,6 +52,17 @@ export const Home: React.FC = () => {
           <span className="text-slate-300">PS ID: 26200</span>
           <span className="w-1 h-1 rounded-full bg-emerald-400" />
           <span className="text-cyan-400">Software Category</span>
+        </motion.div>
+
+        {/* Humanized Operator Greeting */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="text-xs sm:text-sm font-semibold text-emerald-400 mb-3 tracking-wide uppercase flex items-center justify-center gap-1.5"
+        >
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span>{greeting}, {location.name.split(',')[0]} Grid Operator</span>
         </motion.div>
 
         {/* Main Headline */}
@@ -114,30 +135,56 @@ export const Home: React.FC = () => {
         </motion.div>
       </section>
 
-      {/* Live Impact Statistics Strip */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Live Operator Narrative Bar (Humanized commentary on live grid state) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <LiveOperatorNarrator telemetry={telemetry} />
+      </section>
+
+      {/* Live Impact Statistics Strip with Animated Counters */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="glass-panel p-5 text-center">
-            <div className="text-3xl font-extrabold text-emerald-400">96.2%</div>
+          <div className="glass-panel p-5 text-center interactive-card">
+            <div className="text-3xl font-extrabold text-emerald-400 font-mono">
+              <AnimatedCounter value={96.2} decimals={1} suffix="%" />
+            </div>
             <div className="text-xs uppercase font-semibold text-slate-400 mt-1">Grid Efficiency</div>
             <div className="text-[11px] text-slate-500 mt-0.5">Low-loss inverter stage</div>
           </div>
-          <div className="glass-panel p-5 text-center">
-            <div className="text-3xl font-extrabold text-cyan-400">0.82 <span className="text-lg">kg</span></div>
+
+          <div className="glass-panel p-5 text-center interactive-card">
+            <div className="text-3xl font-extrabold text-cyan-400 font-mono">
+              <AnimatedCounter value={0.82} decimals={2} suffix=" kg" />
+            </div>
             <div className="text-xs uppercase font-semibold text-slate-400 mt-1">CO₂ Avoided / kWh</div>
             <div className="text-[11px] text-slate-500 mt-0.5">CEA India official baseline</div>
           </div>
-          <div className="glass-panel p-5 text-center">
-            <div className="text-3xl font-extrabold text-amber-400">24-Hr</div>
+
+          <div className="glass-panel p-5 text-center interactive-card">
+            <div className="text-3xl font-extrabold text-amber-400 font-mono">
+              <AnimatedCounter value={24} suffix="-Hr" />
+            </div>
             <div className="text-xs uppercase font-semibold text-slate-400 mt-1">Predictive Horizon</div>
             <div className="text-[11px] text-slate-500 mt-0.5">Physics-guided AI dispatch</div>
           </div>
-          <div className="glass-panel p-5 text-center">
-            <div className="text-3xl font-extrabold text-purple-400">8.0 <span className="text-lg">kW</span></div>
+
+          <div className="glass-panel p-5 text-center interactive-card">
+            <div className="text-3xl font-extrabold text-purple-400 font-mono">
+              <AnimatedCounter value={8.0} decimals={1} suffix=" kW" />
+            </div>
             <div className="text-xs uppercase font-semibold text-slate-400 mt-1">Hybrid Capacity</div>
             <div className="text-[11px] text-slate-500 mt-0.5">5 kW Solar + 3 kW Wind</div>
           </div>
         </div>
+      </section>
+
+      {/* Interactive Microgrid Energy Flow Schematic */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <InteractiveEnergyFlow telemetry={telemetry} />
+      </section>
+
+      {/* Real Lives Touched in Kanpur (Community Impact Stories) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <CommunityImpactStories />
       </section>
 
       {/* Key Innovation Features */}

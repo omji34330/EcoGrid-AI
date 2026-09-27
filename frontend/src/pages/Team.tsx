@@ -49,6 +49,53 @@ export const Team: React.FC = () => {
         </div>
       </div>
 
+      {/* Our Mission & Kanpur Human Story */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="glass-panel p-6 sm:p-8 border-cyan-500/20 bg-gradient-to-br from-slate-900/90 via-[#0a192f]/60 to-slate-900/90 relative overflow-hidden"
+      >
+        <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div className="space-y-3 max-w-3xl">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse" />
+              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                Our Mission & Human Motivation
+              </span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white">
+              Why We Built EcoGrid AI: The Kanpur Story
+            </h2>
+            <p className="text-sm text-slate-300 leading-relaxed">
+              Living and studying in Kanpur, Uttar Pradesh, our team witnessed firsthand how erratic brownouts during exam seasons force educational institutions and clinics to fire up loud, sooty diesel generators. This not only burdens community budgets with high fuel bills but directly deteriorates air quality across the Indo-Gangetic plain.
+            </p>
+            <p className="text-sm text-slate-400 leading-relaxed">
+              We engineered EcoGrid AI for <strong className="text-emerald-400">Smart India Hackathon 2026</strong> to prove that autonomous, predictive microgrids can transform local solar and wind resources into an unbreakable, 100% clean power lifeline—safeguarding student education, primary healthcare vaccine cold-chains, and community lungs without burning a single drop of diesel.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 shrink-0 lg:w-72">
+            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+              <div className="text-2xl font-black text-cyan-400">0 L</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Diesel reliance during peak solar</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+              <div className="text-2xl font-black text-emerald-400">100%</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Student exam continuity secured</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+              <div className="text-2xl font-black text-amber-400">4,500+</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Clinic vaccines protected in cold-chain</div>
+            </div>
+            <div className="p-3.5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+              <div className="text-2xl font-black text-purple-400">₹2.1L</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Annual fuel savings re-invested</div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Team Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {TEAM_MEMBERS.map((member, index) => (

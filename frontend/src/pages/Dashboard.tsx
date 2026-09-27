@@ -24,6 +24,7 @@ import { EnergyMixDonut } from '../components/charts/EnergyMixDonut';
 import { GenerationBarChart } from '../components/charts/GenerationBarChart';
 import { BatteryGauge } from '../components/charts/BatteryGauge';
 import { LocationSelector } from '../components/layout/LocationSelector';
+import { LiveOperatorNarrator } from '../components/ui/LiveOperatorNarrator';
 
 export const Dashboard: React.FC = () => {
   const {
@@ -116,6 +117,9 @@ export const Dashboard: React.FC = () => {
           </button>
         </motion.div>
       )}
+
+      {/* Live AI Operator Narrator Voice Banner */}
+      <LiveOperatorNarrator telemetry={telemetry} />
 
       {/* Primary Weather KPIs (5 Core Metrics Required by Prompt) */}
       <section>
@@ -223,7 +227,7 @@ export const Dashboard: React.FC = () => {
               <div className="text-xl font-extrabold text-slate-900 dark:text-white">
                 {telemetry?.solarOutputKw ?? 3.45} <span className="text-xs font-semibold text-slate-400">kW</span>
               </div>
-              <div className="text-[10px] text-slate-500">Rated: 5.0 kW Array</div>
+              <div className="text-[10px] text-amber-400/90 font-medium">☀️ Powers 28 classroom LED strips & fans</div>
             </div>
           </div>
 
@@ -236,7 +240,7 @@ export const Dashboard: React.FC = () => {
               <div className="text-xl font-extrabold text-slate-900 dark:text-white">
                 {telemetry?.windOutputKw ?? 1.2} <span className="text-xs font-semibold text-slate-400">kW</span>
               </div>
-              <div className="text-[10px] text-slate-500">Rated: 3.0 kW HAWT</div>
+              <div className="text-[10px] text-sky-400/90 font-medium">💨 Night backup without toxic diesel fumes</div>
             </div>
           </div>
 
@@ -249,7 +253,7 @@ export const Dashboard: React.FC = () => {
               <div className="text-xl font-extrabold text-emerald-400">
                 {telemetry?.totalRenewableKw ?? 4.65} <span className="text-xs font-semibold text-slate-400">kW</span>
               </div>
-              <div className="text-[10px] text-slate-500">Demand: {telemetry?.currentLoadKw ?? 1.25} kW</div>
+              <div className="text-[10px] text-emerald-400/90 font-medium">⚡ 100% clean autonomous local power</div>
             </div>
           </div>
 
@@ -262,7 +266,7 @@ export const Dashboard: React.FC = () => {
               <div className="text-xl font-extrabold text-teal-400">
                 {telemetry?.todayCo2AvoidedKg ?? 30.5} <span className="text-xs font-semibold text-slate-400">kg</span>
               </div>
-              <div className="text-[10px] text-slate-500">0.82 kg/kWh CEA baseline</div>
+              <div className="text-[10px] text-teal-400/90 font-medium">🌱 ~1.4 mature neem trees offset equivalent</div>
             </div>
           </div>
         </div>

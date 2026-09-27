@@ -30,6 +30,70 @@ import {
   Legend,
 } from 'recharts';
 
+interface HumanizedPreset {
+  id: string;
+  title: string;
+  emoji: string;
+  badge: string;
+  description: string;
+  deltaCloud: number;
+  multWind: number;
+  multLoad: number;
+  soc: number;
+  tagColor: string;
+}
+
+const HUMANIZED_PRESETS: HumanizedPreset[] = [
+  {
+    id: 'monsoon',
+    title: 'Monsoon Storm Front',
+    emoji: '⛈️',
+    badge: 'High Turbulence',
+    description: '+40% cloud cover, gusty 1.4x wind, elevated indoor clinic & residential lighting load.',
+    deltaCloud: 40,
+    multWind: 1.4,
+    multLoad: 1.1,
+    soc: 60,
+    tagColor: 'text-cyan-400 border-cyan-500/30 bg-cyan-500/10',
+  },
+  {
+    id: 'heatwave',
+    title: 'Kanpur Summer Heatwave',
+    emoji: '☀️',
+    badge: 'Peak Solar Yield',
+    description: 'Blistering blue skies (-25% clouds), stagnant air (0.7x wind), heavy AC & cooling demand.',
+    deltaCloud: -25,
+    multWind: 0.7,
+    multLoad: 1.4,
+    soc: 85,
+    tagColor: 'text-amber-400 border-amber-500/30 bg-amber-500/10',
+  },
+  {
+    id: 'exam_week',
+    title: 'Campus Exam Night Spike',
+    emoji: '🎓',
+    badge: 'Critical BESS Buffer',
+    description: 'All night study halls, AI servers, and student dorms online (1.5x load, BESS 90% pre-charge).',
+    deltaCloud: 0,
+    multWind: 1.0,
+    multLoad: 1.5,
+    soc: 90,
+    tagColor: 'text-purple-400 border-purple-500/30 bg-purple-500/10',
+  },
+  {
+    id: 'optimal',
+    title: 'Clean Autumn Breeze',
+    emoji: '🍃',
+    badge: 'Net Zero Export',
+    description: 'Optimal irradiance (-30% clouds), 1.3x crisp wind velocity, balanced campus conservation load.',
+    deltaCloud: -30,
+    multWind: 1.3,
+    multLoad: 0.9,
+    soc: 70,
+    tagColor: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+  },
+];
+
 export const AIPrediction: React.FC = () => {
   const { telemetry } = useLiveData();
   const { location } = useLocationContext();
@@ -39,6 +103,7 @@ export const AIPrediction: React.FC = () => {
   const [windMultiplier, setWindMultiplier] = useState<number>(1.0);
   const [loadMultiplier, setLoadMultiplier] = useState<number>(1.0);
   const [initialSoc, setInitialSoc] = useState<number>(65);
+  const [activePreset, setActivePreset] = useState<string | null>(null);
 
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [runCount, setRunCount] = useState<number>(1);
@@ -74,7 +139,28 @@ export const AIPrediction: React.FC = () => {
     }, 700);
   };
 
+  const handleApplyPreset = (preset: HumanizedPreset) => {
+    setActivePreset(preset.id);
+    setCloudCoverDelta(preset.deltaCloud);
+    setWindMultiplier(preset.multWind);
+    setLoadMultiplier(preset.multLoad);
+    setInitialSoc(preset.soc);
+
+    setIsRunning(true);
+    setTimeout(() => {
+      setIsRunning(false);
+      setRunCount((prev) => prev + 1);
+      confetti({
+        particleCount: 65,
+        spread: 75,
+        origin: { y: 0.65 },
+        colors: ['#10B981', '#06B6D4', '#8B5CF6', '#F59E0B'],
+      });
+    }, 500);
+  };
+
   const handleResetScenario = () => {
+    setActivePreset(null);
     setCloudCoverDelta(0);
     setWindMultiplier(1.0);
     setLoadMultiplier(1.0);
@@ -269,6 +355,61 @@ export const AIPrediction: React.FC = () => {
           <span className="text-xs text-slate-400">
             Simulate weather shifts, seasonal cloud cover, and load spikes in real time
           </span>
+        </div>
+
+        {/* Humanized Scenario Presets */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              One-Click Real World Scenarios
+            </span>
+            {activePreset && (
+              <span className="text-[11px] font-semibold text-emerald-400 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                Active Scenario: {HUMANIZED_PRESETS.find((p) => p.id === activePreset)?.title}
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            {HUMANIZED_PRESETS.map((preset) => {
+              const isActive = activePreset === preset.id;
+              return (
+                <motion.button
+                  key={preset.id}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => handleApplyPreset(preset)}
+                  className={`p-3.5 rounded-2xl text-left transition-all duration-200 border relative overflow-hidden flex flex-col justify-between ${
+                    isActive
+                      ? 'bg-emerald-500/15 border-emerald-400 shadow-lg shadow-emerald-500/15'
+                      : 'bg-slate-900/50 hover:bg-slate-800/60 border-white/5 hover:border-white/15'
+                  }`}
+                >
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{preset.emoji}</span>
+                        <span className="text-xs font-bold text-slate-100">{preset.title}</span>
+                      </div>
+                      <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${preset.tagColor}`}>
+                        {preset.badge}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-slate-400 leading-snug">
+                      {preset.description}
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-white/5 flex items-center justify-between text-[10px] text-slate-500">
+                    <span>Click to Simulate</span>
+                    <span className="text-cyan-400 font-mono font-semibold">
+                      {preset.deltaCloud > 0 ? `+${preset.deltaCloud}%` : `${preset.deltaCloud}%`} Cld • {preset.multWind}x Wnd
+                    </span>
+                  </div>
+                </motion.button>
+              );
+            })}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-2">
