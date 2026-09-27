@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-dark: #08131F;
+    --bg-card-dark: rgba(12, 30, 51, 0.65);
+    --bg-card-border-dark: rgba(6, 182, 212, 0.18);
+    --primary: #10B981;
+    --secondary: #06B6D4;
+    --solar: #F59E0B;
+    --wind: #0EA5E9;
+    --battery: #10B981;
+    --grid: #8B5CF6;
+  }
+
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom Glassmorphism & Glow Styles */
+.glass-panel {
+  background: rgba(12, 30, 51, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(6, 182, 212, 0.05);
+}
+
+.glass-panel-glow {
+  background: rgba(12, 30, 51, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6), 0 0 30px -5px rgba(16, 185, 129, 0.15);
+}
+
+.glass-panel-cyan {
+  background: rgba(12, 30, 51, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 20px;
+  box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6), 0 0 30px -5px rgba(6, 182, 212, 0.15);
+}
+
+/* Light mode overrides */
+html:not(.dark) body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html:not(.dark) .glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.06), 0 0 15px 0 rgba(16, 185, 129, 0.05);
+}
+
+html:not(.dark) .glass-panel-glow {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.1);
+}
+
+html:not(.dark) .glass-panel-cyan {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #08131F;
+}
+html:not(.dark) ::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.6);
+}
+
+/* Energy Grid Background Pattern */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+html:not(.dark) .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+}
+
+/* Pulsing radar effect */
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 0.4; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Print styling for Sustainability Reports */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .glass-panel, .glass-panel-glow, .glass-panel-cyan {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+}
