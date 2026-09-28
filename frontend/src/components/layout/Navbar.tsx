@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Sun, Moon, Menu, X, Zap } from 'lucide-react';
+import { Sun, Moon, Menu, X, Zap, ShieldCheck } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { LocationSelector } from './LocationSelector';
 
@@ -14,6 +14,7 @@ export const Navbar: React.FC = () => {
     { name: 'AI Prediction', path: '/prediction' },
     { name: 'Reports', path: '/reports' },
     { name: 'Team', path: '/team' },
+    { name: 'Feedback', path: '/feedback' },
     { name: 'FAQ', path: '/faq' },
   ];
 
@@ -87,6 +88,16 @@ export const Navbar: React.FC = () => {
             )}
           </button>
 
+          {/* Admin Portal Quick Link */}
+          <Link
+            to="/admin"
+            title="Admin Portal"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all duration-200"
+          >
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Admin</span>
+          </Link>
+
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -120,6 +131,14 @@ export const Navbar: React.FC = () => {
               {link.name}
             </NavLink>
           ))}
+          <Link
+            to="/admin"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span>Admin Portal</span>
+          </Link>
         </div>
       )}
     </header>

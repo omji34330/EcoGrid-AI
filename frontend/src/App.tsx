@@ -14,6 +14,8 @@ const AIPrediction = lazy(() => import('./pages/AIPrediction').then(m => ({ defa
 const Reports = lazy(() => import('./pages/Reports').then(m => ({ default: m.Reports })));
 const Team = lazy(() => import('./pages/Team').then(m => ({ default: m.Team })));
 const FAQ = lazy(() => import('./pages/FAQ').then(m => ({ default: m.FAQ })));
+const Feedback = lazy(() => import('./pages/Feedback').then(m => ({ default: m.Feedback })));
+const Admin = lazy(() => import('./pages/Admin').then(m => ({ default: m.Admin })));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
 const Terms = lazy(() => import('./pages/Terms').then(m => ({ default: m.Terms })));
 const NotFound = lazy(() => import('./pages/NotFound').then(m => ({ default: m.NotFound })));
@@ -64,6 +66,10 @@ export function App() {
                 <Route path="/reports" element={<Reports />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/faq" element={<FAQ />} />
+                <Route path="/feedback" element={<Feedback />} />
+                <Route path="/admin" element={<Admin />} />
+                <Route path="/admin/login" element={<Admin />} />
+                <Route path="/login" element={<Admin />} />
                 <Route path="/privacy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="*" element={<NotFound />} />

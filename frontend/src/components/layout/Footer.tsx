@@ -69,6 +69,12 @@ export const Footer: React.FC = () => {
                   Frequently Asked Questions
                 </Link>
               </li>
+              <li>
+                <Link to="/feedback" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 text-emerald-400 font-semibold">
+                  <span>Evaluator Feedback</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-500/30">New</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -83,6 +89,11 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <span className="text-slate-400 text-xs">Theme: Renewable & Sustainable Energy</span>
+              </li>
+              <li>
+                <Link to="/admin" className="hover:text-emerald-400 transition-colors flex items-center gap-1 text-cyan-400 font-medium">
+                  <span>Admin Portal</span>
+                </Link>
               </li>
               <li>
                 <Link to="/privacy" className="hover:text-emerald-400 transition-colors">

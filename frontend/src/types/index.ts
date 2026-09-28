@@ -145,3 +145,24 @@ export interface FAQItem {
   answer: string;
   category: 'general' | 'technical' | 'sih' | 'sustainability';
 }
+
+export interface FeedbackItem {
+  id: string;
+  name: string;
+  email?: string;
+  role?: string;
+  category: string;
+  rating: number;
+  message: string;
+  recommend?: boolean;
+  created_at: string;
+  status: 'new' | 'reviewed' | 'starred';
+}
+
+export interface AdminUser {
+  name: string;
+  email: string;
+  role: string;
+  department?: string;
+}
+
