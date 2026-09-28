@@ -20,7 +20,6 @@ import {
   Zap,
   Cpu,
   Layers,
-  Sparkles,
   AlertCircle,
   ExternalLink,
 } from 'lucide-react';
@@ -82,8 +81,8 @@ export const Admin: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<AdminUser>(DEMO_ADMIN);
 
   // Login Form State
-  const [username, setUsername] = useState('admin@ecogrid.ai');
-  const [password, setPassword] = useState('EcoGrid@2026');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -179,33 +178,38 @@ export const Admin: React.FC = () => {
       // Backend offline/sleeping fallback
     }
 
-    // Client-side fallback check
-    if (
-      (cleanUser === 'admin' || cleanUser === 'admin@ecogrid.ai' || cleanUser === 'omji') &&
-      (cleanPass === 'EcoGrid@2026' || cleanPass === 'admin123' || cleanPass === 'admin')
-    ) {
-      setCurrentUser(DEMO_ADMIN);
-      setIsAuthenticated(true);
-      localStorage.setItem('ecogrid_admin_session', JSON.stringify(DEMO_ADMIN));
-      setIsLoggingIn(false);
-      return;
+    // Client-side fallback check using SHA-256 cryptographic hash
+    try {
+      const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(cleanPass));
+      const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      // SHA-256 hash for secure fallback
+      const VALID_ADMIN_HASH = '29c29054701bb0431cacaf964a83a4b4d937a4555c32c52f61beaa7017b2e66d';
+
+      if (
+        (cleanUser === 'admin' || cleanUser === 'admin@ecogrid.ai' || cleanUser === 'omji') &&
+        hashHex === VALID_ADMIN_HASH
+      ) {
+        setCurrentUser(DEMO_ADMIN);
+        setIsAuthenticated(true);
+        localStorage.setItem('ecogrid_admin_session', JSON.stringify(DEMO_ADMIN));
+        setIsLoggingIn(false);
+        return;
+      }
+    } catch {
+      // ignore
     }
 
     setIsLoggingIn(false);
-    setLoginError('Invalid credentials. Use admin@ecogrid.ai / EcoGrid@2026 or click Auto-Fill.');
+    setLoginError('Invalid administrator credentials. Access is restricted.');
   };
 
   // Handle Logout
   const handleLogout = () => {
     localStorage.removeItem('ecogrid_admin_session');
     setIsAuthenticated(false);
-  };
-
-  // Quick auto-fill
-  const fillDemoCredentials = () => {
-    setUsername('admin@ecogrid.ai');
-    setPassword('EcoGrid@2026');
-    setLoginError('');
   };
 
   // Toggle Feedback Status
@@ -367,7 +371,7 @@ export const Admin: React.FC = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin@ecogrid.ai"
+                placeholder="Enter admin ID or email"
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950/60 border border-slate-700/80 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-all"
               />
             </div>
@@ -412,17 +416,12 @@ export const Admin: React.FC = () => {
             </button>
           </form>
 
-          {/* Quick Demo Credentials for Evaluators */}
-          <div className="pt-2 border-t border-white/[0.06] text-center space-y-2">
-            <div className="text-[11px] text-slate-400">SIH Evaluator / Jury Quick Access:</div>
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              className="w-full py-2 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-xs font-semibold text-emerald-400 transition-all flex items-center justify-center gap-2"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Auto-Fill Demo Credentials (`admin@ecogrid.ai`)</span>
-            </button>
+          {/* Security Notice */}
+          <div className="pt-2 border-t border-white/[0.06] text-center space-y-1">
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500">
+              <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+              <span>Restricted access • Authorized administrators only</span>
+            </div>
           </div>
 
           <div className="text-center pt-2">

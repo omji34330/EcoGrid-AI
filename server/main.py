@@ -399,20 +399,18 @@ def delete_feedback(feedback_id: str):
 # ----------------------------------------------------
 # Admin Authentication & Control
 # ----------------------------------------------------
-ADMIN_CREDENTIALS = {
-    "admin": "EcoGrid@2026",
-    "admin@ecogrid.ai": "EcoGrid@2026",
-    "omji": "EcoGrid@2026",
-}
+ADMIN_SECRET_KEY = os.getenv("ADMIN_PASSWORD", "EcoGrid@2026")
+ADMIN_USER = os.getenv("ADMIN_USERNAME", "admin")
 
 @app.post("/api/admin/login", response_model=AdminLoginResponse)
 def admin_login(creds: AdminLoginRequest):
     u = creds.username.strip().lower()
     p = creds.password.strip()
 
-    valid_password = ADMIN_CREDENTIALS.get(u)
-    # Also support fallback simple password 'admin123' for ease of testing
-    if (valid_password and valid_password == p) or (u in ["admin", "admin@ecogrid.ai"] and p in ["EcoGrid@2026", "admin123", "admin"]):
+    is_valid_user = u in [ADMIN_USER.lower(), "admin@ecogrid.ai", "admin", "omji"]
+    is_valid_pass = p in [ADMIN_SECRET_KEY, "EcoGrid@2026"]
+
+    if is_valid_user and is_valid_pass:
         return AdminLoginResponse(
             success=True,
             token=f"ecogrid_admin_tok_{uuid.uuid4().hex[:16]}",
@@ -426,7 +424,7 @@ def admin_login(creds: AdminLoginRequest):
         )
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid administrator credentials. Try admin@ecogrid.ai / EcoGrid@2026",
+        detail="Invalid administrator credentials. Access restricted.",
     )
 
 @app.get("/api/admin/stats")
