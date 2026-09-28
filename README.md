@@ -194,7 +194,7 @@ EcoGrid AI provides an end-to-end operational software blueprint demonstrating h
 
 | Name | Role | Key Responsibility | Academic Status & Department |
 | :--- | :--- | :--- | :--- |
-| **Om Ji Gupta** | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
+| [**Om Ji Gupta**](https://www.linkedin.com/in/om-ji-gupta-66395a289?utm_source=share_via&utm_content=profile&utm_medium=member_android) | Full Stack Developer | Frontend, Backend, UI/UX & AI Integration | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
 | **Mohd Faizan** | Product & Research Lead | Product Planning, Research & Documentation | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
 | **Mohammmad Uzair Ansari** | Team Leader | Team Coordination & Project Management | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |
 | **Pritam Yadav** | Research Lead | Renewable Energy Research & Data Analysis | Student at Allenhouse Institute of Technology, Kanpur • B.Tech CSE |

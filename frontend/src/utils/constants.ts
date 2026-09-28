@@ -42,7 +42,7 @@ export const TEAM_MEMBERS: TeamMember[] = [
     bio: 'Architected the full-stack EcoGrid AI platform, integrating FastAPI services, React 19 UI/UX, Google Gemini copilot, and Open-Meteo telemetry pipelines.',
     skills: ['React 19', 'TypeScript', 'FastAPI', 'Python', 'Tailwind CSS', 'Gemini AI', 'UI/UX'],
     github: 'https://github.com/omji34330',
-    linkedin: 'https://linkedin.com/in/omjigupta',
+    linkedin: 'https://www.linkedin.com/in/om-ji-gupta-66395a289?utm_source=share_via&utm_content=profile&utm_medium=member_android',
     sihContribution: 'Full-stack application development, responsive glassmorphic design, API integration, and AI chatbot architecture.',
   },
   {
