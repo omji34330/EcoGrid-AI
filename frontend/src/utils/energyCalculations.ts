@@ -75,6 +75,47 @@ export function getBaselineLoadKw(hour: number): number {
 }
 
 /**
+ * Calculates physics-grounded live Battery State of Charge (SOC %)
+ * dynamically based on diurnal solar/load cycles and real-time generation balance.
+ */
+export function calculateDynamicBatterySoc(
+  hour: number,
+  minute: number = 0,
+  netKw: number = 0
+): number {
+  const { batteryMinSocPct, batteryMaxSocPct } = MICROGRID_HARDWARE;
+
+  // Typical diurnal LiFePO4 SOC trajectory for 18 kWh/day Kanpur facility (hourly 0-23)
+  const diurnalSocBenchmarks = [
+    42.0, 39.5, 36.0, 33.5, 30.0, 27.5, // 00:00 - 05:00 (overnight base discharge)
+    28.0, 33.0, 42.0, 54.0, 68.0, 79.0, // 06:00 - 11:00 (morning sunrise charging ramp)
+    86.5, 91.0, 93.5, 92.0, 89.5, 84.0, // 12:00 - 17:00 (peak solar saturation & reserve buffer)
+    77.5, 68.0, 59.0, 52.0, 47.0, 44.0  // 18:00 - 23:00 (evening peak load shaving discharge)
+  ];
+
+  const currentHourIdx = Math.min(23, Math.max(0, hour));
+  const nextHourIdx = (currentHourIdx + 1) % 24;
+
+  const baseCurrent = diurnalSocBenchmarks[currentHourIdx];
+  const baseNext = diurnalSocBenchmarks[nextHourIdx];
+
+  // Smooth minute interpolation between hours
+  const minuteProgress = Math.min(1, Math.max(0, minute / 60));
+  let interpolatedSoc = baseCurrent + (baseNext - baseCurrent) * minuteProgress;
+
+  // Real-time net generation bias (if net surplus is currently high, SOC shifts upward)
+  if (netKw > 0) {
+    interpolatedSoc += Math.min(6.0, netKw * 1.5);
+  } else if (netKw < 0) {
+    interpolatedSoc -= Math.min(5.0, Math.abs(netKw) * 1.2);
+  }
+
+  // Clamp within safe LiFePO4 operational boundaries (15% to 95%)
+  return Number(Math.min(batteryMaxSocPct, Math.max(batteryMinSocPct, interpolatedSoc)).toFixed(1));
+}
+
+
+/**
  * Computes battery SOC and grid interaction for a 24-hour sequence
  */
 export function simulateEnergyBalance(

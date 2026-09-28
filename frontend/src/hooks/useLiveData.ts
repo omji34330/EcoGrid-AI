@@ -5,6 +5,7 @@ import { useLocationContext } from '../context/LocationContext';
 import {
   calculateSolarPower,
   calculateWindPower,
+  calculateDynamicBatterySoc,
   simulateEnergyBalance,
   aggregateDailyGeneration,
   getBaselineLoadKw,
@@ -77,7 +78,7 @@ function generateFallbackTelemetry(
     windOutputKw: windKw,
     totalRenewableKw: Number(totalGen.toFixed(2)),
     currentLoadKw: load,
-    batterySocPct: 74.5,
+    batterySocPct: calculateDynamicBatterySoc(currentHour, now.getMinutes(), totalGen - load),
     batteryStatus: totalGen > load ? 'charging' : 'discharging',
     batteryPowerKw: Number(Math.abs(totalGen - load).toFixed(2)),
     gridExchangeKw: Number((totalGen - load).toFixed(2)),
@@ -236,7 +237,7 @@ export function useLiveData() {
         windOutputKw: windKw,
         totalRenewableKw,
         currentLoadKw,
-        batterySocPct: 76.4,
+        batterySocPct: calculateDynamicBatterySoc(currentHour, now.getMinutes(), netKw),
         batteryStatus,
         batteryPowerKw,
         gridExchangeKw,
@@ -271,11 +272,40 @@ export function useLiveData() {
     fetchData();
   }, [location.latitude, location.longitude, fetchData]);
 
-  // 1-second interval for countdown & auto-refresh
+  // 1-second interval for countdown & live continuous battery/energy integration
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
+      // Continuously update live battery SOC according to physical charging/discharging rates
+      setTelemetry((prev) => {
+        if (!prev) return prev;
+        const deltaHours = 1 / 3600; // 1 second
+        let deltaSoc = 0;
+        if (prev.batteryStatus === 'charging') {
+          // Charging at batteryPowerKw with ~96% single-trip efficiency into 10 kWh BESS
+          deltaSoc = ((prev.batteryPowerKw * 0.96 * deltaHours) / MICROGRID_HARDWARE.batteryCapacityKwh) * 100;
+        } else if (prev.batteryStatus === 'discharging') {
+          // Discharging to serve deficit
+          deltaSoc = -((prev.batteryPowerKw / 0.96 * deltaHours) / MICROGRID_HARDWARE.batteryCapacityKwh) * 100;
+        }
+
+        if (Math.abs(deltaSoc) < 0.00001) return prev;
+
+        const updatedSoc = Number(
+          Math.min(
+            MICROGRID_HARDWARE.batteryMaxSocPct,
+            Math.max(MICROGRID_HARDWARE.batteryMinSocPct, prev.batterySocPct + deltaSoc)
+          ).toFixed(2)
+        );
+
+        if (updatedSoc === prev.batterySocPct) return prev;
+        return {
+          ...prev,
+          batterySocPct: updatedSoc,
+        };
+      });
+
       setCountdown((prev) => {
         if (prev <= 1) {
           fetchData();
