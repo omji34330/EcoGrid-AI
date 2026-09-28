@@ -148,7 +148,7 @@ def fallback_energy_copilot(query: str, location_name: str = "Kanpur, Uttar Prad
             "You can ask me about solar generation formulas, wind turbine curves, battery storage scheduling, or our 0.82 kg CO₂/kWh offset modeling!"
         )
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def read_root():
     return {
         "project": "EcoGrid AI",
@@ -157,9 +157,26 @@ def read_root():
         "theme": "Renewable & Sustainable Energy",
         "status": "Online",
         "docs": "/docs",
+        "endpoints": {
+            "health": "/api/health",
+            "chat": "/api/chat",
+            "predict_explain": "/api/predict/explain",
+        },
     }
 
-@app.get("/api/health")
+@app.api_route("/api", methods=["GET", "HEAD"])
+@app.api_route("/api/", methods=["GET", "HEAD"])
+def read_api_index():
+    return {
+        "message": "EcoGrid AI API Root",
+        "health": "/api/health",
+        "docs": "/docs",
+    }
+
+@app.api_route("/api/health", methods=["GET", "HEAD"])
+@app.api_route("/api/health/", methods=["GET", "HEAD"])
+@app.api_route("/health", methods=["GET", "HEAD"])
+@app.api_route("/health/", methods=["GET", "HEAD"])
 def health_check():
     has_gemini = bool(GEMINI_API_KEY and GEMINI_API_KEY != "your_gemini_api_key_here")
     return {
