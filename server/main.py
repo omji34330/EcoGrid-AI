@@ -38,22 +38,34 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-SYSTEM_PROMPT = """You are the EcoGrid AI Assistant, an advanced renewable energy copilot developed for Smart India Hackathon 2026 (Problem Statement ID 26200: Renewable & Sustainable Energy).
+SYSTEM_PROMPT = """You are the EcoGrid AI Copilot & Universal Assistant, an advanced intelligence engine developed by Team EcoGrid AI from Allenhouse Institute of Technology, Kanpur for Smart India Hackathon 2026 (Problem Statement ID 26200: Renewable & Sustainable Energy).
 
-Your purpose is to monitor and explain renewable energy conditions, forecasts, and sustainability metrics for the Kanpur, Uttar Pradesh, India microgrid installation (Latitude: 26.4499°N, Longitude: 80.3319°E).
+CORE BEHAVIOR DIRECTIVES:
+1. ANSWER ALL USER QUESTIONS: You are capable of answering ANY question the user asks! Whether it is about renewable energy, microgrid operations, mathematics, science, programming, software engineering, general knowledge, team details, technology, or casual conversations, provide a clear, accurate, helpful, and insightful response.
+2. NEVER REFUSE A QUERY: Never say "I can only answer renewable energy queries" or decline general questions. Answer every prompt directly, accurately, and thoroughly.
+3. DOMAIN EXPERTISE: Whenever the user asks about EcoGrid AI, clean energy, microgrids, or SIH 2026, provide authoritative, deep technical depth.
 
-Reference Microgrid Architecture:
-- Solar Array: 5.0 kW bifacial monocrystalline photovoltaic capacity with cloud clearness attenuation modeling.
-- Wind Turbine: 3.0 kW horizontal-axis turbine (Cut-in: 10 km/h, Rated: 45 km/h, Cut-out: 90 km/h; cubic yield curve).
-- Energy Storage (BESS): 10.0 kWh Lithium Iron Phosphate (LiFePO4) battery system with round-trip efficiency ~92%.
-- Base Site Load: 18.0 kWh/day industrial-academic load curve.
-- Carbon Offset Factor: 0.82 kg CO2 avoided per clean kWh generated (India Central Electricity Authority standard baseline).
+EcoGrid AI Platform Reference:
+- Event: Smart India Hackathon 2026 (PS ID 26200: Renewable & Sustainable Energy, Software Category)
+- Reference Node: Kanpur Microgrid (Latitude: 26.4499°N, Longitude: 80.3319°E, Elevation: 126m)
+- Solar Array: 5.0 kW Bifacial Monocrystalline PV (P = P_rated × (1 - 0.75 × CloudCover) × sin(elevation) × TempDerating)
+- Wind Turbine: 3.0 kW Horizontal-Axis (Cut-in: 10 km/h, Rated: 45 km/h, Cut-out: 90 km/h; cubic yield curve: P ∝ v³)
+- Energy Storage (BESS): 10.0 kWh Lithium Iron Phosphate (LiFePO4), ~92% round-trip efficiency, 15%-95% safe SOC window
+- Base Site Load: 18.0 kWh/day commercial-academic load curve
+- Carbon Offset Baseline: 0.82 kg CO2 avoided per clean kWh generated (Central Electricity Authority of India standard baseline)
+- Tech Stack: React 19, TypeScript, Three.js (WebGL 3D Digital Twin), Tailwind CSS v4, Vite, Python, FastAPI, Uvicorn, Google Gemini AI
 
-Guidelines:
-1. Provide concise, clear, technically sound answers on solar generation, wind power, battery State of Charge (SOC), grid efficiency, carbon offsets, and weather impacts.
-2. If asked about Kanpur weather or generation, cite how temperature, wind speed, and cloud cover directly alter power generation physics.
-3. If asked an off-topic query (e.g. entertainment, sports, politics, unrelated general tasks), politely and briefly redirect back: "I specialize in renewable energy, microgrid operations, and EcoGrid AI analytics. How can I assist you with solar, wind, battery storage, or Kanpur's clean energy metrics today?"
-4. Keep responses structured, helpful, and under 250 words unless deep technical analysis is requested.
+EcoGrid AI Team Details (Students at Allenhouse Institute of Technology, Kanpur - B.Tech CSE):
+- Om Ji Gupta: Full Stack Developer (Frontend, Backend, UI/UX & AI Integration)
+- Mohd Faizan: Product & Research Lead (Product Planning, Research & Documentation)
+- Mohammad Uzair Ansari: Team Leader (Team Coordination & Project Management)
+- Pritam Yadav: Research Lead (Renewable Energy Research & Data Analysis)
+- Mohammad Farish Ansari: Team Member (Development, Testing & Implementation)
+- Shivanshi Mishra: Presentation (Demo Presentation & Communication)
+
+Tone & Formatting:
+- Friendly, articulate, intelligent, and well-structured using markdown formatting.
+- Use bullet points, bold key terms, and equations where helpful.
 """
 
 # Data Models
@@ -151,66 +163,170 @@ feedback_db: List[Dict[str, Any]] = [
 
 # Built-in Domain Knowledge Base for fallback when Gemini key is not configured or offline
 def fallback_energy_copilot(query: str, location_name: str = "Kanpur, Uttar Pradesh") -> str:
-    q = query.lower()
+    q = query.lower().strip()
     short_loc = location_name.split('(')[0].strip()
 
-    if any(k in q for k in ["solar", "sun", "pv", "irradiance", "photovoltaic"]):
+    # 1. Team Members & Allenhouse Institute
+    if any(k in q for k in ["team", "member", "who made", "who created", "who built", "author", "developer", "om ji", "faizan", "uzair", "pritam", "farish", "shivanshi", "allenhouse", "college", "institution"]):
+        return (
+            "👥 **EcoGrid AI Team Details (SIH 2026 – PS ID 26200):**\n\n"
+            "All team members are students at **Allenhouse Institute of Technology, Kanpur** (Department of B.Tech Computer Science & Engineering):\n\n"
+            "• **Om Ji Gupta** — Full Stack Developer (Frontend, Backend, UI/UX & AI Integration)\n"
+            "• **Mohd Faizan** — Product & Research Lead (Product Planning, Research & Documentation)\n"
+            "• **Mohammad Uzair Ansari** — Team Leader (Team Coordination & Project Management)\n"
+            "• **Pritam Yadav** — Research Lead (Renewable Energy Research & Data Analysis)\n"
+            "• **Mohammad Farish Ansari** — Team Member (Development, Testing & Implementation)\n"
+            "• **Shivanshi Mishra** — Presentation (Demo Presentation & Communication)\n\n"
+            "Developed under the academic mentorship of Allenhouse Institute of Technology, Kanpur."
+        )
+
+    # 2. Languages, Tech Stack & Architecture
+    elif any(k in q for k in ["language", "tech stack", "technology", "stack", "framework", "frontend", "backend", "python", "typescript", "react", "fastapi", "three", "css", "html"]):
+        return (
+            "💻 **EcoGrid AI Technology Stack & Languages:**\n\n"
+            "• **Frontend:** TypeScript, React 19, Vite 8, Three.js (WebGL 3D Microgrid Twin & Atmosphere Globe), Framer Motion, Tailwind CSS v4, Recharts, Lucide Icons\n"
+            "• **Backend:** Python 3, FastAPI, Uvicorn (ASGI high-speed server), Pydantic v2 validation, HTTPX, Google Gemini AI (gemini-2.5-flash)\n"
+            "• **Telemetry Integration:** Open-Meteo live atmospheric REST API, Modbus/MQTT IoT bridge architecture\n"
+            "• **Deployment:** Render (FastAPI Python backend), Vercel (React Vite frontend), GitHub CI/CD\n"
+            "• **Design System:** Cyber-green glassmorphism with high-contrast accessibility (WCAG compliant)."
+        )
+
+    # 3. Solar Photovoltaic Physics
+    elif any(k in q for k in ["solar", "sun", "pv", "irradiance", "photovoltaic", "insolation", "panel"]):
         return (
             f"☀️ **Solar Power Modeling at EcoGrid AI ({short_loc}):**\n\n"
-            f"Our installation utilizes a **5 kW monocrystalline array**. Generation is determined by solar elevation angle and atmospheric clearness: `P_solar = P_rated × (1 - 0.75 × CloudCover) × sin(elevation)`.\n\n"
-            f"During peak daylight hours (11:00 AM – 2:00 PM), clearness factors above 80% yield upwards of 4.2 to 4.8 kW instantaneous power, directly feeding daytime load and charging our 10 kWh battery."
+            "Our reference installation models a **5.0 kW bifacial monocrystalline photovoltaic array**:\n\n"
+            "• **Physics Formula:** `P_solar = P_rated × (1 - 0.75 × CloudCover) × sin(elevation) × TempDerating`\n"
+            "• **Peak Daylight Yield:** During solar noon (11:00 AM – 2:00 PM), output reaches **4.2 to 4.8 kW** under clear skies (clearness > 80%).\n"
+            "• **Temperature Derating:** Monocrystalline silicon experiences -0.4%/°C efficiency attenuation for ambient temperatures above 25°C STC.\n"
+            "• **Direct & Diffuse Modeling:** Even under 80%+ overcast conditions, diffuse atmospheric radiation delivers ~12% to 25% baseline generation."
         )
-    elif any(k in q for k in ["wind", "turbine", "gust", "breeze"]):
+
+    # 4. Wind Turbine & Aerodynamics
+    elif any(k in q for k in ["wind", "turbine", "gust", "breeze", "aerodynamic", "blade", "rpm"]):
         return (
             f"💨 **Wind Turbine Dynamic Power Curve ({short_loc}):**\n\n"
-            "EcoGrid AI's microgrid includes a **3 kW rated horizontal-axis turbine**. Power output follows fluid aerodynamic cubic velocity: `P ∝ v³`.\n\n"
-            "• **Cut-in Speed:** 10 km/h (minimum wind required to spin)\n"
-            "• **Rated Speed:** 45 km/h (achieves full 3.0 kW output)\n"
-            "• **Cut-out Speed:** 90 km/h (auto-feathered for mechanical braking)\n\n"
-            "Convective wind surges provide ideal supplementary night/dusk energy when solar fades."
+            "EcoGrid AI incorporates a **3.0 kW horizontal-axis micro-turbine**. Power output follows fluid aerodynamic cubic velocity (`P ∝ v³`):\n\n"
+            "• **Cut-in Speed (10 km/h):** Minimum velocity required to overcome rotor inertia and start generating.\n"
+            "• **Rated Speed (45 km/h):** Optimal aerodynamic velocity achieving full 3.0 kW rated electrical capacity.\n"
+            "• **Cut-out Speed (90 km/h):** Automatic electro-mechanical feathering shutdown to protect turbine integrity.\n"
+            "• **Mathematical Curve:** `P(v) = 3.0 × ((v - 10) / 35)³` kW (between 10 and 45 km/h).\n\n"
+            "Convective pre-monsoon and dusk winds in Kanpur offer ideal complementary power when solar generation fades."
         )
-    elif any(k in q for k in ["battery", "soc", "storage", "charge", "bess"]):
+
+    # 5. Battery BESS, SOC & Chemistry
+    elif any(k in q for k in ["battery", "soc", "storage", "charge", "discharge", "bess", "lifepo4", "lithium"]):
         return (
             f"🔋 **Battery Energy Storage System (BESS) at {short_loc}:**\n\n"
-            "The site is equipped with a **10 kWh Lithium Iron Phosphate (LiFePO4)** battery bank. State of Charge (SOC) is dynamically tracked:\n\n"
-            "`SOC(t) = SOC(t-1) + η_charge × (P_gen - P_load) × Δt`\n\n"
-            "We maintain a recommended safe Depth of Discharge (DOD) between 20% and 95% to maximize battery cycle life (~4,000+ cycles) while preserving buffer for evening grid peak shaving."
+            "The microgrid is anchored by a **10.0 kWh Lithium Iron Phosphate (LiFePO4)** battery bank:\n\n"
+            "• **State of Charge (SOC):** Continuously computed via dynamic energy balance: `SOC(t) = SOC(t-1) + η_charge × (P_gen - P_load) × Δt / Capacity`.\n"
+            "• **Safe Operating Envelope:** Guarded between **15% minimum** (Depth of Discharge safeguard) and **95% maximum** (overcharge thermal protection).\n"
+            "• **Cycle Longevity:** LiFePO4 chemistry yields **4,000+ deep cycles** at ~92% round-trip efficiency.\n"
+            "• **Dispatch Strategy:** Daylight solar surplus charges the bank; evening peak campus demand (18:00 – 22:00) draws battery power to shave grid imports."
         )
-    elif any(k in q for k in ["co2", "carbon", "emission", "sustainability", "offset", "tree", "green"]):
+
+    # 6. Carbon Accounting, CO2, ESG & CEA Standards
+    elif any(k in q for k in ["co2", "carbon", "emission", "sustainability", "offset", "tree", "green", "esg", "cea"]):
         return (
             "🌱 **Carbon Accounting & Environmental Offsets:**\n\n"
-            "EcoGrid AI uses the official **Central Electricity Authority (CEA) of India baseline grid emission factor of 0.82 kg CO₂/kWh**.\n\n"
-            "Every 100 kWh of clean renewable generation prevents 82 kg of greenhouse gas emissions from conventional thermal coal plants, equivalent to the atmospheric carbon sequestration of ~4 mature trees over a month."
+            "EcoGrid AI adopts the official **Central Electricity Authority (CEA) of India Baseline Carbon Dioxide Database**:\n\n"
+            "• **Standard Factor:** **0.82 kg CO₂ avoided per clean kWh generated** (Northern Regional grid benchmark).\n"
+            "• **Tangible Equivalence:** Generating 100 kWh of clean renewable power prevents **82 kg of coal-fired CO₂**, equivalent to the monthly carbon sequestration of ~4 mature trees.\n"
+            "• **SIH Impact:** Aligned with India's COP26 Panchamrit pledge and 500 GW non-fossil capacity target by 2030."
         )
-    elif any(k in q for k in ["location", "site", "weather", "gps", "where", "kanpur"]):
+
+    # 7. SIH 2026 Problem Statement 26200
+    elif any(k in q for k in ["sih", "hackathon", "ps", "problem statement", "26200", "smart india"]):
         return (
-            f"📍 **Active Microgrid Node: {location_name}:**\n\n"
-            f"EcoGrid AI is dynamically streaming live atmospheric telemetry and physics-based generation forecasts for **{short_loc}** as well as our reference node in Kanpur (26.4499°N, 80.3319°E).\n\n"
-            "You can switch between predefined metropolitan nodes or allow GPS geolocation anytime from the navigation bar."
-        )
-    elif any(k in q for k in ["sih", "hackathon", "ps", "problem statement", "26200"]):
-        return (
-            "🏆 **Smart India Hackathon 2026 Aligned:**\n\n"
+            "🏆 **Smart India Hackathon 2026 Alignment:**\n\n"
             "• **Problem Statement:** PS ID 26200\n"
             "• **Theme:** Renewable & Sustainable Energy\n"
             "• **Category:** Software\n"
-            "EcoGrid AI solves the operational deficit in decentralized renewable systems by giving operators real-time predictive intelligence, automated carbon auditing, and a 24-hour dispatch outlook."
+            "• **Challenge Addressed:** Decentralized renewable systems face severe unreliability due to variable weather and reactive battery management.\n"
+            "• **EcoGrid AI's Solution:** Provides physics-informed 24-hour predictive dispatch, an interactive 3D WebGL microgrid digital twin, automated carbon accounting, and a multi-device AI operations copilot."
         )
-    elif any(k in q for k in ["hello", "hi", "hey", "who are you", "what can you do"]):
+
+    # 8. Microgrid Architecture & Islanding
+    elif any(k in q for k in ["microgrid", "island", "grid", "islanding", "inverter", "frequency", "dispatch"]):
         return (
-            f"👋 Greetings! I am the **EcoGrid AI Copilot** monitoring **{short_loc}**.\n\n"
-            "I can assist you with:\n"
-            "• Live Solar & Wind generation estimates\n"
-            "• Battery State of Charge (SOC) & storage health\n"
-            "• 24-hour weather-driven AI energy forecasting\n"
-            "• Carbon avoidance calculations (0.82 kg CO₂/kWh)\n"
-            "• SIH 2026 Problem Statement 26200 specifications\n\n"
-            "What would you like to explore?"
+            "⚡ **Microgrid Architecture & Dispatch Modes:**\n\n"
+            "EcoGrid AI models dual-operational microgrid modes:\n\n"
+            "• **Grid-Tied Mode:** Seamlessly synchronized with Kanpur's 50.0 Hz distribution grid; exports surplus clean power and draws minimum grid imports during deficits.\n"
+            "• **Autonomous Islanded Mode:** Disconnects from the utility grid during outages; battery BESS and active solar/wind inverters form voltage and frequency (V/f control) to supply critical campus loads.\n"
+            "• **Inverter Efficiency:** High-efficiency bidirectional hybrid inverters operate at ~95% conversion efficiency."
         )
+
+    # 9. 3D Digital Twin & Simulation
+    elif any(k in q for k in ["3d", "twin", "webgl", "digital twin", "simulation", "visual", "globe"]):
+        return (
+            "🌐 **Interactive 3D WebGL Microgrid Digital Twin:**\n\n"
+            "Our platform features real-time 3D simulation rendered using Three.js and custom GLSL shaders:\n\n"
+            "• **Live Solar PV Array:** Automatically tilts toward the sun's elevation angle based on the current hour.\n"
+            "• **Wind Turbine:** Rotates with dynamic RPM proportional to live wind speed (10–90 km/h).\n"
+            "• **BESS Battery Enclosure:** Features pulsating charge indicators reflecting live Battery SOC percentage.\n"
+            "• **Atmospheric Globe:** Holographic particle globe visualizing Kanpur's real-time cloud cover and weather conditions."
+        )
+
+    # 10. Kanpur Location & Open-Meteo Telemetry
+    elif any(k in q for k in ["location", "site", "weather", "gps", "kanpur", "temperature", "cloud"]):
+        return (
+            f"📍 **Active Microgrid Node: {location_name}:**\n\n"
+            f"• **Coordinates:** Latitude 26.4499°N, Longitude 80.3319°E (Elevation: 126m)\n"
+            "• **Live Telemetry:** Streams real-time solar irradiance, ambient temperature, relative humidity, atmospheric pressure, and wind vectors via Open-Meteo.\n"
+            "• **Climatic Dynamics:** Evaluates seasonal Indo-Gangetic plain factors including winter smog, particulate haze, and summer pre-monsoon convective winds.\n"
+            "• **Multi-City Support:** You can toggle between Kanpur, Delhi, Mumbai, Bengaluru, Chennai, or use GPS geolocation anytime."
+        )
+
+    # 11. Feedback Form & Admin Portal
+    elif any(k in q for k in ["feedback", "admin", "login", "review", "evaluate", "csv"]):
+        return (
+            "🛡️ **Evaluator Feedback & Admin Portal:**\n\n"
+            "• **Evaluator Feedback Form (`/feedback`):** Allows hackathon judges, jury members, and operators to submit ratings, role affiliation, categories, and recommendations with instant confetti receipt.\n"
+            "• **Admin Portal (`/admin`):** Secure authenticated management console featuring live reviews inbox, star/delete actions, microgrid dispatch simulator, and 1-click **Export to CSV** for SIH documentation."
+        )
+
+    # 12. Math, Science & Physics Formulas
+    elif any(k in q for k in ["math", "physics", "formula", "equation", "calculate", "ohm", "energy", "power", "efficiency"]):
+        return (
+            "📐 **Scientific & Engineering Formulations in EcoGrid AI:**\n\n"
+            "• **Electrical Power:** `P = V × I = I² × R` (Ohm's & Joule's laws)\n"
+            "• **Kinetic Wind Power:** `P_wind = 0.5 × ρ × A × v³ × Cp` (where ρ = air density ~1.225 kg/m³, Cp = Betz limit ~0.593)\n"
+            "• **Photovoltaic Power:** `P_solar = G_eff × A_pv × η_pv × [1 - γ(T_cell - 25)]`\n"
+            "• **Battery Energy Integral:** `E_stored(t) = ∫ (P_charge × η - P_discharge / η) dt`\n"
+            "• **Carbon Avoidance:** `CO₂ avoided = Clean kWh × 0.82 kg/kWh`"
+        )
+
+    # 13. Coding, Web Development & AI
+    elif any(k in q for k in ["code", "coding", "fastapi", "react", "api", "ai", "gemini", "how it works", "architecture", "software"]):
+        return (
+            "💻 **Software Architecture & Development Design:**\n\n"
+            "• **Reactive UI:** Built on React 19 with Vite 8 for sub-millisecond hot reloads and optimized bundle chunking.\n"
+            "• **FastAPI Backend:** Python ASGI server exposing `/api/chat`, `/api/health`, `/api/feedback`, and `/api/predict/explain` with Pydantic v2 schemas.\n"
+            "• **Gemini AI Integration:** Utilizes official Google GenAI SDK (`gemini-2.5-flash`) with prompt-engineered system instructions and fallback resilience.\n"
+            "• **State & Hydration:** Real-time LocationContext and ThemeContext synchronizing with browser localStorage and Open-Meteo endpoints."
+        )
+
+    # 14. Greetings & Conversational
+    elif any(k in q for k in ["hello", "hi", "hey", "who are you", "what can you do", "help", "good morning", "good evening"]):
+        return (
+            f"👋 Greetings! I am the **EcoGrid AI Copilot & Universal Assistant** monitoring **{short_loc}**.\n\n"
+            "I can assist you with **ANY** question you have:\n\n"
+            "• ☀️ **Renewable Energy:** Live solar & wind calculations, physics curves\n"
+            "• 🔋 **Battery BESS:** State of charge (SOC), LiFePO4 storage scheduling\n"
+            "• 🌱 **Carbon & ESG:** 0.82 kg CO₂/kWh avoidance calculations\n"
+            "• 🏆 **SIH 2026 Details:** PS ID 26200 alignment, team members & Allenhouse Institute\n"
+            "• 💻 **Code & Architecture:** React 19, FastAPI, Three.js 3D twin, TypeScript\n"
+            "• 🌐 **General Knowledge:** Science, math, engineering, or general questions\n\n"
+            "Feel free to ask me anything!"
+        )
+
+    # 15. Universal Response for All Other Inquiries
     else:
         return (
-            f"I am the EcoGrid AI Assistant specialized in renewable microgrids, energy forecasting, and sustainability metrics for {short_loc} (PS ID 26200).\n\n"
-            "You can ask me about solar generation formulas, wind turbine curves, battery storage scheduling, or our 0.82 kg CO₂/kWh offset modeling!"
+            f"Thank you for your question! As the **EcoGrid AI Assistant** (developed by students at Allenhouse Institute of Technology, Kanpur for SIH 2026 PS ID 26200), I am here to help you.\n\n"
+            f"Regarding your query **\"{query}\"**:\n\n"
+            f"• I am designed to answer all questions across clean energy microgrids, mathematical physics, software engineering (React 19, TypeScript, Python FastAPI), our team profile, or general science and technical concepts.\n"
+            f"• If you would like a detailed breakdown on our Kanpur microgrid node, 24-hour predictive dispatch, 3D WebGL twin, or any topic, please feel free to ask!"
         )
 
 @app.api_route("/", methods=["GET", "HEAD"])
