@@ -11,7 +11,8 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Dashboard', path: '/dashboard' },
-    { name: 'AI Prediction', path: '/prediction' },
+    { name: 'Future Prediction', path: '/future-prediction', isNew: true },
+    { name: 'AI Simulation', path: '/prediction' },
     { name: 'Reports', path: '/reports' },
     { name: 'Team', path: '/team' },
     { name: 'Feedback', path: '/feedback' },
@@ -50,20 +51,25 @@ export const Navbar: React.FC = () => {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 lg:gap-2">
+        <nav className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `px-3.5 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                `px-2.5 lg:px-3 py-1.5 rounded-xl text-xs lg:text-sm font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                   isActive
                     ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm shadow-emerald-500/10'
                     : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`
               }
             >
-              {link.name}
+              <span>{link.name}</span>
+              {link.isNew && (
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 animate-pulse">
+                  New
+                </span>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -121,14 +127,19 @@ export const Navbar: React.FC = () => {
               to={link.path}
               onClick={() => setMobileMenuOpen(false)}
               className={({ isActive }) =>
-                `block px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                `flex items-center justify-between px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                   isActive
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     : 'text-slate-300 hover:bg-white/5'
                 }`
               }
             >
-              {link.name}
+              <span>{link.name}</span>
+              {link.isNew && (
+                <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                  New
+                </span>
+              )}
             </NavLink>
           ))}
           <Link

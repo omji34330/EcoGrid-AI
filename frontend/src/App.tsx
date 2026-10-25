@@ -10,6 +10,7 @@ import { Zap } from 'lucide-react';
 // Lazy-loaded routes for optimal code splitting & performance
 const Home = lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
 const Dashboard = lazy(() => import('./pages/Dashboard').then(m => ({ default: m.Dashboard })));
+const FuturePrediction = lazy(() => import('./pages/FuturePrediction').then(m => ({ default: m.FuturePrediction })));
 const AIPrediction = lazy(() => import('./pages/AIPrediction').then(m => ({ default: m.AIPrediction })));
 const Reports = lazy(() => import('./pages/Reports').then(m => ({ default: m.Reports })));
 const Team = lazy(() => import('./pages/Team').then(m => ({ default: m.Team })));
@@ -60,6 +61,9 @@ export function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/future-prediction" element={<FuturePrediction />} />
+                <Route path="/forecast" element={<FuturePrediction />} />
+                <Route path="/upcoming" element={<FuturePrediction />} />
                 <Route path="/prediction" element={<AIPrediction />} />
                 <Route path="/ai-prediction" element={<AIPrediction />} />
                 <Route path="/predictions" element={<AIPrediction />} />

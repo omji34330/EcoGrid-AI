@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Thermometer,
@@ -16,6 +17,7 @@ import {
   Clock,
   MapPin,
   Rotate3d,
+  Sparkles,
 } from 'lucide-react';
 import { useLiveData } from '../hooks/useLiveData';
 import { MetricCard } from '../components/ui/MetricCard';
@@ -73,6 +75,15 @@ export const Dashboard: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
           {/* Quick Location Switcher / GPS */}
           <LocationSelector compact />
+
+          {/* Future Prediction Quick Link */}
+          <Link
+            to="/future-prediction"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition-all shadow-sm shadow-emerald-500/10"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Future Prediction</span>
+          </Link>
 
           {/* 3D Twin Toggle Button */}
           <button

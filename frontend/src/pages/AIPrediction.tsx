@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import {
@@ -12,6 +13,8 @@ import {
   RotateCcw,
   CheckCircle2,
   Info,
+  Calendar,
+  ArrowRight,
 } from 'lucide-react';
 import { useLiveData } from '../hooks/useLiveData';
 import { useLocationContext } from '../context/LocationContext';
@@ -190,6 +193,15 @@ export const AIPrediction: React.FC = () => {
         {/* Big Animated Run Prediction Button & Node Switcher */}
         <div className="flex flex-wrap items-center gap-3">
           <LocationSelector compact />
+
+          <Link
+            to="/future-prediction"
+            className="flex items-center gap-1.5 px-3.5 py-3 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 text-xs font-bold transition-all shadow-sm shadow-emerald-500/10"
+          >
+            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Upcoming Days (7d/14d)</span>
+            <ArrowRight className="w-3 h-3" />
+          </Link>
 
           <button
             onClick={handleResetScenario}

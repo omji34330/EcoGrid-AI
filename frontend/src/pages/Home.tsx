@@ -133,11 +133,11 @@ export const Home: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 flex-wrap"
         >
           <Link
             to="/dashboard"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-bold text-base shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-bold text-base shadow-xl shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group"
           >
             <Activity className="w-5 h-5 group-hover:animate-pulse" />
             <span>View Live Dashboard</span>
@@ -145,11 +145,20 @@ export const Home: React.FC = () => {
           </Link>
 
           <Link
+            to="/future-prediction"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 backdrop-blur-md border border-emerald-500/40 text-emerald-300 font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10"
+          >
+            <Sparkles className="w-5 h-5 text-emerald-400" />
+            <span>Upcoming Days Prediction</span>
+            <span className="text-[10px] px-1.5 py-0.5 rounded uppercase font-extrabold bg-emerald-400 text-slate-950">New</span>
+          </Link>
+
+          <Link
             to="/prediction"
-            className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/10 dark:bg-white/5 hover:bg-white/15 backdrop-blur-md border border-slate-300 dark:border-white/15 text-slate-800 dark:text-white font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white/10 dark:bg-white/5 hover:bg-white/15 backdrop-blur-md border border-slate-300 dark:border-white/15 text-slate-800 dark:text-white font-bold text-base hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
           >
             <Sparkles className="w-5 h-5 text-cyan-400" />
-            <span>Run AI Prediction</span>
+            <span>24h What-If Simulation</span>
           </Link>
         </motion.div>
       </section>

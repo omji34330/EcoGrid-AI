@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import {
   Rotate3d,
   Sun,
+  Moon,
   Wind,
   BatteryCharging,
   Sparkles,
@@ -22,6 +23,7 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
   const [activePreset, setActivePreset] = useState<CameraPreset>('isometric');
   const [wireframeMode, setWireframeMode] = useState<boolean>(false);
   const [autoRotate, setAutoRotate] = useState<boolean>(true);
+  const [isDayMode, setIsDayMode] = useState<boolean>(true); // Default to Light Theme / Daylight Mode
 
   // References to animated 3D objects
   const rotorRef = useRef<THREE.Group | null>(null);
@@ -76,7 +78,13 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     // 1. Scene Setup
     const scene = new THREE.Scene();
     sceneRef.current = scene;
-    scene.fog = new THREE.FogExp2(0x040914, 0.025);
+    if (isDayMode) {
+      scene.background = new THREE.Color(0xf1f7fd);
+      scene.fog = new THREE.FogExp2(0xe2edf8, 0.015);
+    } else {
+      scene.background = new THREE.Color(0x040914);
+      scene.fog = new THREE.FogExp2(0x040914, 0.025);
+    }
 
     // 2. Camera Setup
     const width = container.clientWidth || 800;
@@ -97,36 +105,78 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     container.appendChild(renderer.domElement);
 
     // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0x0f2b3c, 1.4);
-    scene.add(ambientLight);
+    if (isDayMode) {
+      // Natural Daylight & Sun Simulation
+      const ambientLight = new THREE.AmbientLight(0xffffff, 2.2);
+      scene.add(ambientLight);
 
-    const sunLight = new THREE.DirectionalLight(0xfff3d1, 2.2);
-    sunLight.position.set(15, 20, 10);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
-    sunLight.shadow.bias = -0.001;
-    scene.add(sunLight);
+      const sunLight = new THREE.DirectionalLight(0xfff9e6, 3.0);
+      sunLight.position.set(15, 24, 12);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 1024;
+      sunLight.shadow.mapSize.height = 1024;
+      sunLight.shadow.bias = -0.001;
+      scene.add(sunLight);
 
-    const cyanFillLight = new THREE.PointLight(0x06b6d4, 3, 20);
-    cyanFillLight.position.set(-6, 4, -4);
-    scene.add(cyanFillLight);
+      const skyFillLight = new THREE.PointLight(0x38bdf8, 1.2, 30);
+      skyFillLight.position.set(-8, 6, -6);
+      scene.add(skyFillLight);
 
-    const emeraldFillLight = new THREE.PointLight(0x10b981, 3, 20);
-    emeraldFillLight.position.set(4, 3, 4);
-    scene.add(emeraldFillLight);
+      const groundFillLight = new THREE.PointLight(0x10b981, 0.8, 30);
+      groundFillLight.position.set(6, 4, 6);
+      scene.add(groundFillLight);
+    } else {
+      // Cyber Night Lighting
+      const ambientLight = new THREE.AmbientLight(0x0f2b3c, 1.4);
+      scene.add(ambientLight);
 
-    // 5. Ground Cyber-Grid
-    const gridHelper = new THREE.GridHelper(26, 26, 0x06b6d4, 0x0f2b3c);
+      const sunLight = new THREE.DirectionalLight(0xfff3d1, 2.2);
+      sunLight.position.set(15, 20, 10);
+      sunLight.castShadow = true;
+      sunLight.shadow.mapSize.width = 1024;
+      sunLight.shadow.mapSize.height = 1024;
+      sunLight.shadow.bias = -0.001;
+      scene.add(sunLight);
+
+      const cyanFillLight = new THREE.PointLight(0x06b6d4, 3, 20);
+      cyanFillLight.position.set(-6, 4, -4);
+      scene.add(cyanFillLight);
+
+      const emeraldFillLight = new THREE.PointLight(0x10b981, 3, 20);
+      emeraldFillLight.position.set(4, 3, 4);
+      scene.add(emeraldFillLight);
+    }
+
+    // 5. Ground Grid
+    const gridHelper = new THREE.GridHelper(
+      26,
+      26,
+      isDayMode ? 0x0284c7 : 0x06b6d4,
+      isDayMode ? 0xcbd5e1 : 0x0f2b3c
+    );
     gridHelper.position.y = 0;
     scene.add(gridHelper);
+
+    if (isDayMode) {
+      const groundGeo = new THREE.CircleGeometry(13.5, 48);
+      const groundMat = new THREE.MeshStandardMaterial({
+        color: 0xf8fafc,
+        roughness: 0.9,
+        metalness: 0.05,
+      });
+      const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+      groundMesh.rotation.x = -Math.PI / 2;
+      groundMesh.position.y = -0.01;
+      groundMesh.receiveShadow = true;
+      scene.add(groundMesh);
+    }
 
     // Concentric Energy Pulse Rings on ground
     const ringGeo = new THREE.RingGeometry(0.2, 11, 32);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x06b6d4,
+      color: isDayMode ? 0x0284c7 : 0x06b6d4,
       transparent: true,
-      opacity: 0.08,
+      opacity: isDayMode ? 0.12 : 0.08,
       side: THREE.DoubleSide,
     });
     const ringMesh = new THREE.Mesh(ringGeo, ringMat);
@@ -141,9 +191,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     // Tower
     const towerGeo = new THREE.CylinderGeometry(0.12, 0.28, 5.5, 16);
     const metalMat = new THREE.MeshStandardMaterial({
-      color: 0xe2e8f0,
-      metalness: 0.8,
-      roughness: 0.25,
+      color: isDayMode ? 0xffffff : 0xe2e8f0,
+      metalness: isDayMode ? 0.4 : 0.8,
+      roughness: isDayMode ? 0.3 : 0.25,
       wireframe: wireframeMode,
     });
     const tower = new THREE.Mesh(towerGeo, metalMat);
@@ -155,8 +205,8 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     // Base collar
     const collarGeo = new THREE.CylinderGeometry(0.4, 0.5, 0.2, 16);
     const darkMetalMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      metalness: 0.9,
+      color: isDayMode ? 0x334155 : 0x1e293b,
+      metalness: 0.8,
       roughness: 0.3,
     });
     const collar = new THREE.Mesh(collarGeo, darkMetalMat);
@@ -175,7 +225,11 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     rotorGroup.position.set(0, 5.5, 0.55);
 
     const hubGeo = new THREE.SphereGeometry(0.2, 16, 16);
-    const hubMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.9, roughness: 0.1 });
+    const hubMat = new THREE.MeshStandardMaterial({
+      color: isDayMode ? 0x0284c7 : 0x06b6d4,
+      metalness: 0.8,
+      roughness: 0.2,
+    });
     const hub = new THREE.Mesh(hubGeo, hubMat);
     rotorGroup.add(hub);
 
@@ -187,8 +241,8 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
 
       const bladeGeo = new THREE.BoxGeometry(0.12, 2.2, 0.04);
       const bladeMat = new THREE.MeshStandardMaterial({
-        color: 0xf8fafc,
-        metalness: 0.5,
+        color: isDayMode ? 0xffffff : 0xf8fafc,
+        metalness: 0.3,
         roughness: 0.2,
       });
       const blade = new THREE.Mesh(bladeGeo, bladeMat);
@@ -210,14 +264,18 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     const panelRows = 3;
     const panelCols = 3;
     const panelMat = new THREE.MeshStandardMaterial({
-      color: 0x082f49,
+      color: isDayMode ? 0x0369a1 : 0x082f49,
       emissive: 0x0284c7,
-      emissiveIntensity: 0.25,
+      emissiveIntensity: isDayMode ? 0.15 : 0.25,
       metalness: 0.85,
       roughness: 0.15,
       wireframe: wireframeMode,
     });
-    const panelFrameMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.4 });
+    const panelFrameMat = new THREE.MeshStandardMaterial({
+      color: isDayMode ? 0x64748b : 0x334155,
+      metalness: 0.85,
+      roughness: 0.3,
+    });
 
     for (let r = 0; r < panelRows; r++) {
       for (let c = 0; c < panelCols; c++) {
@@ -257,11 +315,11 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     // Outer Enclosure (Industrial Cabinet)
     const cabinetGeo = new THREE.BoxGeometry(1.8, 1.3, 1.2);
     const cabinetMat = new THREE.MeshStandardMaterial({
-      color: 0x0f172a,
-      metalness: 0.7,
-      roughness: 0.3,
+      color: isDayMode ? 0xf1f5f9 : 0x0f172a,
+      metalness: isDayMode ? 0.3 : 0.7,
+      roughness: isDayMode ? 0.4 : 0.3,
       transparent: true,
-      opacity: 0.9,
+      opacity: isDayMode ? 0.95 : 0.9,
       wireframe: wireframeMode,
     });
     const cabinet = new THREE.Mesh(cabinetGeo, cabinetMat);
@@ -300,9 +358,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
     // Building 1 (Academic Complex)
     const bldg1Geo = new THREE.BoxGeometry(2.4, 3.2, 1.8);
     const bldgMat = new THREE.MeshStandardMaterial({
-      color: 0x1e293b,
-      metalness: 0.3,
-      roughness: 0.7,
+      color: isDayMode ? 0xe2e8f0 : 0x1e293b,
+      metalness: isDayMode ? 0.2 : 0.3,
+      roughness: isDayMode ? 0.5 : 0.7,
       wireframe: wireframeMode,
     });
     const bldg1 = new THREE.Mesh(bldg1Geo, bldgMat);
@@ -313,7 +371,11 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
 
     // Glowing Architectural Windows
     const winGeo = new THREE.PlaneGeometry(0.2, 0.35);
-    const winMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.8 });
+    const winMat = new THREE.MeshBasicMaterial({
+      color: isDayMode ? 0x0284c7 : 0x38bdf8,
+      transparent: true,
+      opacity: isDayMode ? 0.75 : 0.8,
+    });
     for (let floor = 0; floor < 3; floor++) {
       for (let col = 0; col < 4; col++) {
         const windowMesh = new THREE.Mesh(winGeo, winMat);
@@ -324,7 +386,11 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
 
     // Inverter Cabinet near the building
     const invGeo = new THREE.BoxGeometry(0.8, 1.0, 0.5);
-    const invMat = new THREE.MeshStandardMaterial({ color: 0x06b6d4, metalness: 0.8, roughness: 0.2 });
+    const invMat = new THREE.MeshStandardMaterial({
+      color: isDayMode ? 0x0284c7 : 0x06b6d4,
+      metalness: 0.8,
+      roughness: 0.2,
+    });
     const inverter = new THREE.Mesh(invGeo, invMat);
     inverter.position.set(1.6, 0.5, 0);
     campusGroup.add(inverter);
@@ -362,7 +428,11 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
 
     curves.forEach((curve) => {
       const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.025, 8, false);
-      const tubeMat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, transparent: true, opacity: 0.25 });
+      const tubeMat = new THREE.MeshBasicMaterial({
+        color: isDayMode ? 0x0284c7 : 0x06b6d4,
+        transparent: true,
+        opacity: isDayMode ? 0.35 : 0.25,
+      });
       const tubeMesh = new THREE.Mesh(tubeGeo, tubeMat);
       scene.add(tubeMesh);
     });
@@ -574,31 +644,78 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
       }
       renderer.dispose();
     };
-  }, [telemetry, wireframeMode, autoRotate]);
+  }, [telemetry, wireframeMode, autoRotate, isDayMode]);
 
   return (
-    <div className="relative glass-panel overflow-hidden border-cyan-500/20 bg-gradient-to-b from-[#081220]/90 to-[#030712]/95 shadow-2xl">
+    <div
+      className={`relative glass-panel overflow-hidden transition-colors duration-500 shadow-2xl ${
+        isDayMode
+          ? 'bg-gradient-to-b from-sky-50/95 via-white/95 to-slate-100/95 border-sky-300/40 text-slate-800'
+          : 'bg-gradient-to-b from-[#081220]/90 to-[#030712]/95 border-cyan-500/20 text-white'
+      }`}
+    >
       {/* 3D Header Toolbar */}
       <div className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        <div className="flex items-center gap-2.5 bg-slate-900/80 backdrop-blur-md px-3.5 py-1.5 rounded-2xl border border-white/10 pointer-events-auto">
-          <Rotate3d className="w-4 h-4 text-cyan-400 animate-spin-slow" />
+        <div
+          className={`flex items-center gap-2.5 backdrop-blur-md px-3.5 py-1.5 rounded-2xl border pointer-events-auto transition-colors ${
+            isDayMode
+              ? 'bg-white/90 border-slate-200/80 shadow-sm text-slate-800'
+              : 'bg-slate-900/80 border-white/10 text-white'
+          }`}
+        >
+          <Rotate3d className={`w-4 h-4 animate-spin-slow ${isDayMode ? 'text-sky-600' : 'text-cyan-400'}`} />
           <div className="flex flex-col">
-            <span className="text-xs font-bold text-white flex items-center gap-1.5">
+            <span className={`text-xs font-bold flex items-center gap-1.5 ${isDayMode ? 'text-slate-900' : 'text-white'}`}>
               3D Microgrid Digital Twin
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </span>
-            <span className="text-[10px] text-slate-400">Interactive WebGL Physics View</span>
+            <span className={`text-[10px] ${isDayMode ? 'text-slate-500' : 'text-slate-400'}`}>
+              Interactive WebGL Physics View
+            </span>
           </div>
         </div>
 
         {/* View Controls & Presets */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="flex items-center gap-1 bg-slate-900/80 backdrop-blur-md p-1 rounded-xl border border-white/10 text-xs">
+          {/* Day / Night Theme Switcher (Defaults to Day / Light Theme) */}
+          <button
+            onClick={() => setIsDayMode((prev) => !prev)}
+            title={isDayMode ? 'Switch to Night Theme (Dark)' : 'Switch to Daylight Theme (Light)'}
+            className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 text-xs font-semibold ${
+              isDayMode
+                ? 'bg-amber-500/15 border-amber-400/50 text-amber-700 shadow-sm hover:bg-amber-500/25'
+                : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
+            }`}
+          >
+            {isDayMode ? (
+              <>
+                <Sun className="w-3.5 h-3.5 text-amber-500" />
+                <span className="text-[11px] font-bold text-amber-700">Light</span>
+              </>
+            ) : (
+              <>
+                <Moon className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="text-[11px] font-bold text-cyan-300">Dark</span>
+              </>
+            )}
+          </button>
+
+          <div
+            className={`flex items-center gap-1 backdrop-blur-md p-1 rounded-xl border text-xs transition-colors ${
+              isDayMode
+                ? 'bg-white/90 border-slate-200/80 shadow-sm text-slate-700'
+                : 'bg-slate-900/80 border-white/10 text-slate-300'
+            }`}
+          >
             <button
               onClick={() => applyCameraPreset('isometric')}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 activePreset === 'isometric'
-                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                  ? isDayMode
+                    ? 'bg-sky-500/15 text-sky-700 border border-sky-400/50 shadow-sm font-semibold'
+                    : 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
+                  : isDayMode
+                  ? 'text-slate-600 hover:text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -608,7 +725,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
               onClick={() => applyCameraPreset('solar')}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 activePreset === 'solar'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
+                  ? 'bg-amber-500/20 text-amber-600 dark:text-amber-300 border border-amber-500/40 shadow-sm font-semibold'
+                  : isDayMode
+                  ? 'text-slate-600 hover:text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -618,7 +737,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
               onClick={() => applyCameraPreset('turbine')}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 activePreset === 'turbine'
-                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/40 shadow-sm'
+                  ? 'bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/40 shadow-sm font-semibold'
+                  : isDayMode
+                  ? 'text-slate-600 hover:text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -628,7 +749,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
               onClick={() => applyCameraPreset('battery')}
               className={`px-2.5 py-1 rounded-lg font-medium transition-all ${
                 activePreset === 'battery'
-                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm'
+                  ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/40 shadow-sm font-semibold'
+                  : isDayMode
+                  ? 'text-slate-600 hover:text-slate-900'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -642,7 +765,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
             title="Toggle 3D Wireframe Mesh"
             className={`p-2 rounded-xl border transition-all ${
               wireframeMode
-                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300'
+                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-500 dark:text-cyan-300'
+                : isDayMode
+                ? 'bg-white/90 border-slate-200 text-slate-600 hover:text-slate-900'
                 : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
             }`}
           >
@@ -655,7 +780,9 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
             title="Toggle Cinematic Auto-Orbit"
             className={`p-2 rounded-xl border transition-all ${
               autoRotate
-                ? 'bg-emerald-500/20 border-emerald-400 text-emerald-300'
+                ? 'bg-emerald-500/20 border-emerald-400 text-emerald-600 dark:text-emerald-300'
+                : isDayMode
+                ? 'bg-white/90 border-slate-200 text-slate-600 hover:text-slate-900'
                 : 'bg-slate-900/80 border-white/10 text-slate-400 hover:text-white'
             }`}
           >
@@ -677,40 +804,50 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
           <motion.div
             whileHover={{ scale: 1.02 }}
             onClick={() => applyCameraPreset('solar')}
-            className="cursor-pointer p-3 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-amber-500/25 hover:border-amber-500/50 shadow-lg"
+            className={`cursor-pointer p-3 rounded-2xl backdrop-blur-md border shadow-lg transition-colors ${
+              isDayMode
+                ? 'bg-white/92 border-amber-400/40 hover:border-amber-500 shadow-slate-200/50'
+                : 'bg-slate-900/85 border-amber-500/25 hover:border-amber-500/50 shadow-black/40'
+            }`}
           >
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="flex items-center gap-1.5 font-semibold text-amber-300">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className={`flex items-center gap-1.5 font-semibold ${isDayMode ? 'text-amber-700' : 'text-amber-300'}`}>
                 <Sun className="w-3.5 h-3.5" />
                 Solar PV Array
               </span>
-              <span className="text-[10px] text-slate-500">5 kW</span>
+              <span className={`text-[10px] ${isDayMode ? 'text-slate-500' : 'text-slate-500'}`}>5 kW</span>
             </div>
-            <div className="text-lg font-extrabold text-white mt-1">
+            <div className={`text-lg font-extrabold mt-1 ${isDayMode ? 'text-slate-900' : 'text-white'}`}>
               {telemetry?.solarOutputKw ?? 3.45}{' '}
-              <span className="text-xs font-semibold text-slate-400">kW</span>
+              <span className={`text-xs font-semibold ${isDayMode ? 'text-slate-500' : 'text-slate-400'}`}>kW</span>
             </div>
-            <div className="text-[10px] text-amber-400/90 font-medium">Bifacial tilt 25° South</div>
+            <div className={`text-[10px] font-medium ${isDayMode ? 'text-amber-700' : 'text-amber-400/90'}`}>
+              Bifacial tilt 25° South
+            </div>
           </motion.div>
 
           {/* Wind Turbine Live Badge */}
           <motion.div
             whileHover={{ scale: 1.02 }}
             onClick={() => applyCameraPreset('turbine')}
-            className="cursor-pointer p-3 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-sky-500/25 hover:border-sky-500/50 shadow-lg"
+            className={`cursor-pointer p-3 rounded-2xl backdrop-blur-md border shadow-lg transition-colors ${
+              isDayMode
+                ? 'bg-white/92 border-sky-400/40 hover:border-sky-500 shadow-slate-200/50'
+                : 'bg-slate-900/85 border-sky-500/25 hover:border-sky-500/50 shadow-black/40'
+            }`}
           >
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="flex items-center gap-1.5 font-semibold text-sky-300">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className={`flex items-center gap-1.5 font-semibold ${isDayMode ? 'text-sky-700' : 'text-sky-300'}`}>
                 <Wind className="w-3.5 h-3.5" />
                 Wind Turbine
               </span>
-              <span className="text-[10px] text-slate-500">3 kW</span>
+              <span className={`text-[10px] ${isDayMode ? 'text-slate-500' : 'text-slate-500'}`}>3 kW</span>
             </div>
-            <div className="text-lg font-extrabold text-white mt-1">
+            <div className={`text-lg font-extrabold mt-1 ${isDayMode ? 'text-slate-900' : 'text-white'}`}>
               {telemetry?.windOutputKw ?? 1.2}{' '}
-              <span className="text-xs font-semibold text-slate-400">kW</span>
+              <span className={`text-xs font-semibold ${isDayMode ? 'text-slate-500' : 'text-slate-400'}`}>kW</span>
             </div>
-            <div className="text-[10px] text-sky-400/90 font-medium">
+            <div className={`text-[10px] font-medium ${isDayMode ? 'text-sky-700' : 'text-sky-400/90'}`}>
               Spinning @ {telemetry?.windSpeed ?? 14.2} km/h
             </div>
           </motion.div>
@@ -719,32 +856,44 @@ export const MicrogridDigitalTwin3D: React.FC<MicrogridDigitalTwin3DProps> = ({ 
           <motion.div
             whileHover={{ scale: 1.02 }}
             onClick={() => applyCameraPreset('battery')}
-            className="cursor-pointer p-3 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-emerald-500/25 hover:border-emerald-500/50 shadow-lg"
+            className={`cursor-pointer p-3 rounded-2xl backdrop-blur-md border shadow-lg transition-colors ${
+              isDayMode
+                ? 'bg-white/92 border-emerald-400/40 hover:border-emerald-500 shadow-slate-200/50'
+                : 'bg-slate-900/85 border-emerald-500/25 hover:border-emerald-500/50 shadow-black/40'
+            }`}
           >
-            <div className="flex items-center justify-between text-[11px] text-slate-400">
-              <span className="flex items-center gap-1.5 font-semibold text-emerald-300">
+            <div className="flex items-center justify-between text-[11px]">
+              <span className={`flex items-center gap-1.5 font-semibold ${isDayMode ? 'text-emerald-700' : 'text-emerald-300'}`}>
                 <BatteryCharging className="w-3.5 h-3.5" />
                 BESS Battery
               </span>
-              <span className="text-[10px] text-slate-500">10 kWh</span>
+              <span className={`text-[10px] ${isDayMode ? 'text-slate-500' : 'text-slate-500'}`}>10 kWh</span>
             </div>
-            <div className="text-lg font-extrabold text-white mt-1">
+            <div className={`text-lg font-extrabold mt-1 ${isDayMode ? 'text-slate-900' : 'text-white'}`}>
               {telemetry?.batterySocPct ?? 76.4}%{' '}
-              <span className="text-xs font-semibold text-emerald-400">
+              <span className={`text-xs font-semibold ${isDayMode ? 'text-emerald-600' : 'text-emerald-400'}`}>
                 ({telemetry?.batteryStatus ?? 'charging'})
               </span>
             </div>
-            <div className="text-[10px] text-emerald-400/90 font-medium">LiFePO₄ core active</div>
+            <div className={`text-[10px] font-medium ${isDayMode ? 'text-emerald-700' : 'text-emerald-400/90'}`}>
+              LiFePO₄ core active
+            </div>
           </motion.div>
 
           {/* Interaction Tip */}
-          <div className="p-3 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-white/10 flex flex-col justify-between text-[11px]">
-            <div className="flex items-center gap-1.5 text-cyan-400 font-semibold">
+          <div
+            className={`p-3 rounded-2xl backdrop-blur-md border flex flex-col justify-between text-[11px] ${
+              isDayMode
+                ? 'bg-white/92 border-slate-200 shadow-sm text-slate-700'
+                : 'bg-slate-900/85 border-white/10 text-white'
+            }`}
+          >
+            <div className={`flex items-center gap-1.5 font-semibold ${isDayMode ? 'text-sky-600' : 'text-cyan-400'}`}>
               <Sparkles className="w-3.5 h-3.5" />
               <span>3D Orbit Navigation</span>
             </div>
-            <p className="text-[10px] text-slate-400 leading-snug">
-              Drag mouse or swipe to rotate 360° • Scroll to zoom in/out • Click badges to focus components
+            <p className={`text-[10px] leading-snug ${isDayMode ? 'text-slate-600' : 'text-slate-400'}`}>
+              Drag mouse or swipe to rotate 360° • Scroll to zoom • Use Light/Dark toggle above
             </p>
           </div>
         </div>

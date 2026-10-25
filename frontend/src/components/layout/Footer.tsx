@@ -50,6 +50,12 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/future-prediction" className="hover:text-emerald-400 transition-colors text-emerald-400 font-semibold flex items-center gap-1.5">
+                  <span>Future Days Prediction</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 border border-emerald-500/30">New</span>
+                </Link>
+              </li>
+              <li>
                 <Link to="/prediction" className="hover:text-emerald-400 transition-colors">
                   AI Generation Forecast
                 </Link>

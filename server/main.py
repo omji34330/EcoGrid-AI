@@ -277,7 +277,21 @@ def fallback_energy_copilot(query: str, location_name: str = "Kanpur, Uttar Prad
             "• **Multi-City Support:** You can toggle between Kanpur, Delhi, Mumbai, Bengaluru, Chennai, or use GPS geolocation anytime."
         )
 
-    # 11. Feedback Form & Admin Portal
+    # 11. Future Prediction & Multi-Day Forecasting
+    elif any(k in q for k in ["future", "upcoming", "predict upcoming", "forecast", "next days", "tomorrow", "multi-day", "7 days", "14 days", "weekly prediction", "future prediction"]):
+        return (
+            f"🔮 **Upcoming Days Future Prediction Module (`/future-prediction`):**\n\n"
+            f"EcoGrid AI provides multi-day predictive energy forecasting for **{short_loc}**:\n\n"
+            "• **Forecasting Horizons:** Supports **3 Days** (immediate dispatch), **7 Days** (weekly planning), and **14 Days** (fortnight macro-outlook).\n"
+            "• **Predicted Parameters:** Computes daily solar radiation yield (kWh), wind turbine output (kWh), campus load demand (kWh), and net grid export/import.\n"
+            "• **Battery BESS Trajectory:** Predicts daily peak battery saturation SOC % and minimum overnight buffer reserve % to guarantee zero blackout risk.\n"
+            "• **Interactive 24h Drill-Down:** Click any upcoming day card to inspect its full 24-hour generation curve and hourly load profile.\n"
+            "• **Climate Stress-Testing:** Interactive sliders allow you to simulate cloud cover anomalies (-40% to +50%), wind velocity multipliers (0.6x to 1.8x), and campus load surges (0.7x to 1.6x).\n"
+            "• **CSV Export:** Download full multi-day forecast tables for external dispatch scheduling.\n\n"
+            "👉 Navigate to **`/future-prediction`** in the top navigation menu to explore upcoming days data!"
+        )
+
+    # 12. Feedback Form & Admin Portal
     elif any(k in q for k in ["feedback", "admin", "login", "review", "evaluate", "csv"]):
         return (
             "🛡️ **Evaluator Feedback & Admin Portal:**\n\n"

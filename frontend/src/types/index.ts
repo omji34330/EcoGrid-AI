@@ -166,3 +166,55 @@ export interface AdminUser {
   department?: string;
 }
 
+export interface UpcomingDayForecast {
+  date: string;
+  dayLabel: string;
+  fullDayLabel: string;
+  weatherCondition: string;
+  weatherCode: number;
+  tempMaxC: number;
+  tempMinC: number;
+  avgWindSpeedKmh: number;
+  peakWindSpeedKmh: number;
+  avgCloudCoverPct: number;
+  sunshineHours: number;
+  solarYieldKwh: number;
+  windYieldKwh: number;
+  totalRenewableKwh: number;
+  campusDemandKwh: number;
+  netGridKwh: number;
+  selfSufficiencyPct: number;
+  bessMinBufferSocPct: number;
+  bessPeakChargeSocPct: number;
+  co2AvoidedKg: number;
+  confidenceScorePct: number;
+  statusBadge: 'Surplus Export' | 'Self Sufficient' | 'Partial Grid Draw';
+  advisoryNote: string;
+  hourlyBreakdown: HourlyEnergyPoint[];
+}
+
+export interface MultiDayForecastSummary {
+  horizonDays: number;
+  locationName: string;
+  latitude: number;
+  longitude: number;
+  totalProjectedKwh: number;
+  totalSolarKwh: number;
+  totalWindKwh: number;
+  totalDemandKwh: number;
+  netGridBalanceKwh: number;
+  avgDailyRenewableKwh: number;
+  totalCo2AvoidedKg: number;
+  avgSelfSufficiencyPct: number;
+  bestGenerationDay: {
+    dayLabel: string;
+    totalKwh: number;
+  };
+  lowestGenerationDay: {
+    dayLabel: string;
+    totalKwh: number;
+  };
+  days: UpcomingDayForecast[];
+}
+
+
