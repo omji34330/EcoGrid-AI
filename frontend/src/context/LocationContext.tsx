@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { GeoLocation } from '../types';
 
 export const PRESET_LOCATIONS: GeoLocation[] = [
-  { name: 'Kanpur, Uttar Pradesh (SIH Reference)', latitude: 26.4499, longitude: 80.3319 },
+  { name: 'Kanpur, Uttar Pradesh', latitude: 26.4499, longitude: 80.3319 },
   { name: 'New Delhi, Delhi NCR', latitude: 28.6139, longitude: 77.2090 },
   { name: 'Bengaluru, Karnataka', latitude: 12.9716, longitude: 77.5946 },
   { name: 'Mumbai, Maharashtra', latitude: 19.0760, longitude: 72.8777 },
@@ -33,7 +33,12 @@ export const LocationProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       const saved = localStorage.getItem('ecogrid_location');
       if (saved) {
-        return JSON.parse(saved);
+        const parsed: GeoLocation = JSON.parse(saved);
+        if (parsed.name && /sih/i.test(parsed.name)) {
+          parsed.name = parsed.name.replace(/\s*\(SIH\s*Reference\)/gi, '').replace(/\s*SIH/gi, '').trim();
+          localStorage.setItem('ecogrid_location', JSON.stringify(parsed));
+        }
+        return parsed;
       }
     } catch {
       // ignore JSON parse error

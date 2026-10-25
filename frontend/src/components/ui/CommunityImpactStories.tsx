@@ -184,7 +184,7 @@ export const CommunityImpactStories: React.FC = () => {
                 {activeStory.statLabel}
               </div>
               <span className="text-[10px] text-emerald-400 font-semibold mt-2 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                Verified SIH Metric
+                Verified Impact Metric
               </span>
             </div>
           </div>

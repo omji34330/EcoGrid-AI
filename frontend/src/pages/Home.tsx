@@ -456,7 +456,7 @@ export const Home: React.FC = () => {
             <div className="space-y-3 max-w-xl">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/20">
-                  SIH 2026 Reference System
+                  Clean Microgrid Reference System
                 </span>
                 <span className="text-xs text-slate-400">Declared Hardware Baseline</span>
               </div>
